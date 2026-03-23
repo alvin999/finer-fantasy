@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { drawPressureChart, drawCompareChart, drawConceptChart, drawPuckAnimation } from './charts.js';
 import { updateNarrative, toggleAnimation } from './ui.js';
+import { runExtractionSimulation } from './physics.js';
 
 // 將需要被 HTML 內聯屬性 (如 onclick) 呼叫的函數掛載到 window
 window.switchMachine = function(machine, btn) {
@@ -9,6 +10,7 @@ window.switchMachine = function(machine, btn) {
     btn.classList.add('active');
     
     if (!state.isPlaying) {
+        state.simulation = runExtractionSimulation(state);
         setTimeout(() => { 
             redrawRV();
         }, 10);
@@ -27,7 +29,10 @@ window.setMethod = function(method, btn) {
     };
     const infoBox = document.getElementById('info-box');
     if (infoBox) infoBox.innerHTML = info[method];
-    if (!state.isPlaying) redrawRV();
+    if (!state.isPlaying) {
+        state.simulation = runExtractionSimulation(state);
+        redrawRV();
+    }
 };
 
 window.switchSubTab = function(name, tabEl) {
@@ -51,6 +56,8 @@ window.toggleAnimation = function() {
 function redrawRV() {
     const active = document.querySelector('.tab-content.active');
     if (!active) return;
+    
+    // 確保各圖表的比較邏輯能反應當前全域設定
     if (active.id === 'tab-pressure') {
         drawPressureChart(1, (peak, dur) => updateNarrative(peak, dur));
         drawPuckAnimation(0);
@@ -62,6 +69,9 @@ function redrawRV() {
 
 // 初始化
 function initAll() {
+    // 初始化模擬快取
+    state.simulation = runExtractionSimulation(state);
+
     drawPressureChart(1, (peak, dur) => updateNarrative(peak, dur)); 
     drawPuckAnimation(0);
     drawCompareChart(); 
@@ -74,7 +84,10 @@ function initAll() {
             state.currentWD = parseInt(this.value);
             const wdDisp = document.getElementById('wd-display');
             if (wdDisp) wdDisp.textContent = state.currentWD;
-            if (!state.isPlaying) redrawRV();
+            if (!state.isPlaying) {
+                state.simulation = runExtractionSimulation(state);
+                redrawRV();
+            }
         });
     }
 
@@ -84,7 +97,10 @@ function initAll() {
             state.headspace = parseFloat(this.value);
             const hsDisp = document.getElementById('hs-display');
             if (hsDisp) hsDisp.textContent = state.headspace.toFixed(1);
-            if (!state.isPlaying) redrawRV();
+            if (!state.isPlaying) {
+                state.simulation = runExtractionSimulation(state);
+                redrawRV();
+            }
         });
     }
 

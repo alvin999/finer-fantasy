@@ -1,6 +1,6 @@
 import { state, PUMP_MAX, TOTAL_TIME, N } from './state.js';
 import { drawPressureChart, drawCompareChart, drawConceptChart, drawPuckAnimation } from './charts.js';
-import { mkCurve, actualPressure } from './physics.js';
+import { mkCurve, getSimulatedValue } from './physics.js';
 
 // ======== NARRATIVE (RV) ========
 
@@ -72,7 +72,8 @@ export function startAnimation(redrawRV) {
 
             const rtEl = document.getElementById('stat-realtime');
             if (rtEl) {
-                const curP = actualPressure(state.animProgress * TOTAL_TIME, state.currentWD, state.currentMethod, state.currentMachine, state.headspace);
+                const t = state.animProgress * TOTAL_TIME;
+                const curP = getSimulatedValue(t, state.simulation.pressures);
                 rtEl.textContent = curP.toFixed(1);
             }
 
@@ -133,7 +134,8 @@ function updateStats(peak, dur) {
 
     const rtEl = document.getElementById('stat-realtime');
     if (rtEl) {
-        const curP = actualPressure(state.animProgress * TOTAL_TIME, state.currentWD, state.currentMethod, state.currentMachine, state.headspace);
+        const t = state.animProgress * TOTAL_TIME;
+        const curP = getSimulatedValue(t, state.simulation.pressures);
         rtEl.textContent = curP.toFixed(1);
     }
     updateNarrative(peak, dur);

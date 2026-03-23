@@ -3,11 +3,17 @@ export const state = {
     currentWD: 80,
     currentMethod: 'normal',
     currentMachine: 'rotary',
-    currentMachine: 'rotary',
     animFrame: null,
     animProgress: 0,
     isPlaying: false,
-    headspace: 2.0
+    headspace: 2.0,
+    // 物理模擬快取
+    simulation: {
+        pressures: [],
+        flows: [],
+        puckResistances: [],
+        delay: 0
+    }
 };
 
 export const PUMP_MAX = { rotary: 9, vibe: 12 };

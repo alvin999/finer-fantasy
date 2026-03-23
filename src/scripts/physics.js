@@ -1,57 +1,104 @@
 import { TOTAL_TIME, N, PUMP_MAX } from './state.js';
 
-// ======== CALIBRATED PHYSICS ========
+// ======== 上帝視角 (Static) + 跟隨者 (Follower) 模型 ========
 
 /**
- * 計算粉餅假想阻力
+ * 計算粉餅本質強度 (上帝視角 - 黃線)
  * @param {number} t 當前時間 (s)
- * @param {string} method 佈粉手法 ('normal', 'heavy', 'uneven')
- * @returns {number} 阻力數值 (bar)
+ * @param {string} method 佈粉手法
+ * @returns {number} 阻力上限 (bar)
  */
 export function puckResistance(t, method) {
-    let base = 14.0 - 8.5 * (1 - Math.exp(-t / 12.0));
-    if (method === 'heavy') base = Math.min(base * 1.08 + 0.5, 15.0);
+    let base = 13.5 * (0.45 + 0.55 * Math.exp(-t / 14.0));
+    if (method === 'heavy') base = 15.0 * (0.5 + 0.5 * Math.exp(-t / 18.0));
     else if (method === 'uneven') {
-        base = Math.max(base * 0.87 - 0.8 + (t > 7 ? Math.sin(t * 0.95) * 0.55 : 0), 4.0);
+        base = 11.5 * (0.35 + 0.65 * Math.exp(-t / 10.0));
+        // 額外的隨機脆弱性 (上帝視角的基石就在崩潰)
+        if (t > 8) base *= (1 - 0.08 * Math.abs(Math.sin(t * 1.5)));
     }
-    return Math.min(Math.max(base, 5.5), 15.0);
+    return Math.min(Math.max(base, 4.0), 15.0);
 }
 
 /**
- * 計算 Rotary/Vibe 泵浦的實際萃取壓力
- * @param {number} t 當前時間 (s)
- * @param {number} wd 10秒出水量 (g)
- * @param {string} method 佈粉手法
- * @param {string} machine 機器類型 ('rotary', 'vibe')
- * @param {number} headspace 粉頂空間 (mm)
- * @returns {number} 實際壓力 (bar)
+ * 執行即時模擬 (上帝視角 vs 跟隨者)
+ * @param {object} s 當前狀態 (state)
+ * @returns {object} 模擬結果
  */
-export function actualPressure(t, wd, method, machine, headspace = 2.0) {
-    const maxP = PUMP_MAX[machine];
-    const puck = puckResistance(t, method);
-    const wdNorm = (wd - 60) / 40; // 0 at WD60, 1 at WD100
-    const alpha = 0.55 + wdNorm * 0.44; // 0.55 at WD60, 0.99 at WD100
+export function runExtractionSimulation(s) {
+    const { currentWD: wd, currentMethod: method, currentMachine: machine, headspace } = s;
+    const P_pump = PUMP_MAX[machine];
+    const dt = TOTAL_TIME / N;
+    
+    // 1. 延遲 (由 Headspace 體積與流速決定)
+    const V_hs_max = headspace * 2.64;
+    const delay = V_hs_max / (wd / 10);
+    
+    // 2. 爬壓斜率與跟隨效應參數
+    // WD 越大，爬升越快 (alpha 越大)，且最終壓力越接近黃線 (scaling 越大)
+    const wdNorm = (wd - 60) / 40; // 0 to 1
+    const alpha = 0.55 + wdNorm * 0.75; // 0.55 ~ 1.3 (爬坡陡度)
+    const follower_scaling = 0.65 + wdNorm * 0.35; // 0.65 ~ 1.0 (跟隨程度)
 
-    // Headspace 造成的延遲 (大約 1mm = 2.6ml)
-    const volToFill = headspace * 2.64;
-    const flowRate = wd / 10; // 假設初始填充流速接近 WD/10
-    const delay = volToFill / flowRate;
+    let pressures = [];
+    let flows = [];
+    let puckResistances = []; // 黃線數據
 
-    const target = Math.min(puck, maxP);
-    const tEff = Math.max(0, t - delay);
-    const raw = target * (1 - Math.exp(-alpha * tEff / 1.0));
-    let p = Math.min(raw, target);
+    for (let i = 0; i < N; i++) {
+        const t = i * dt;
+        
+        // 黃線：靜態公式，不受任何機器參數影響
+        const p_hypo = puckResistance(t, method);
+        puckResistances.push(p_hypo);
 
-    if (machine === 'vibe' && t > delay + 2) p += Math.sin(t * 2.8) * 0.13;
-    if (method === 'uneven' && t > delay + 8) p *= (1 - 0.055 * Math.abs(Math.sin(t * 1.3)));
+        let p_actual = 0;
+        if (t > delay) {
+            const tEff = t - delay;
+            // 紅線目標值：受限於上帝視角 (黃線) 且隨 WD 縮放
+            const target = Math.min(P_pump, p_hypo * follower_scaling);
+            
+            // 使用飽和曲線模擬爬坡 (斜率由 alpha 控制)
+            p_actual = target * (1 - Math.exp(-alpha * tEff / 0.85));
+            
+            // 佈粉不均的微觀擾動
+            if (method === 'uneven' && tEff > 2) {
+                p_actual *= (1 - 0.12 * Math.abs(Math.sin(t * 1.5)));
+            }
+        }
 
-    return Math.min(Math.max(p, 0), maxP + 0.15);
+        // Vibe Pump 震盪特性
+        if (machine === 'vibe' && p_actual > 0.6) {
+            p_actual += Math.sin(t * 3.8) * 0.13;
+        }
+
+        pressures.push(Math.min(Math.max(p_actual, 0), P_pump + 0.15));
+        
+        // 虛擬流量：壓力越高，流量越大 (簡化模型)
+        const q = p_actual > 0 ? (wd/10) * (p_actual/P_pump) * 1.1 : 0;
+        flows.push(q);
+    }
+
+    return { pressures, flows, puckResistances, delay };
+}
+
+/**
+ * 取得模擬曲線特定時間的值 (查表法)
+ */
+export function getSimulatedValue(t, dataArray) {
+    if (!dataArray || dataArray.length === 0) return 0;
+    const idx = Math.min(Math.floor((t / TOTAL_TIME) * N), N - 1);
+    return dataArray[idx];
+}
+
+/**
+ * [兼容性用] 計算單點壓力
+ */
+export function actualPressure(t, wd, method, machine, headspace) {
+    const sim = runExtractionSimulation({ currentWD: wd, currentMethod: method, currentMachine: machine, headspace });
+    return getSimulatedValue(t, sim.pressures);
 }
 
 /**
  * 生成數據曲線
- * @param {Function} fn 物理量計算函數
- * @returns {Array} 數值數組
  */
 export function mkCurve(fn) { 
     return Array.from({ length: N }, (_, i) => fn(i * TOTAL_TIME / N)); 
