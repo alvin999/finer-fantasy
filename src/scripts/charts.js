@@ -7,7 +7,8 @@ export function prepCanvas(id, h) {
     const el = document.getElementById(id);
     if (!el) return null;
     const W = el.offsetWidth;
-    const H = h || el.offsetHeight || 230; // Use provided H or detect from DOM
+    // 使用傳入的 h，或者優先讀取元素本身的 height 屬性，避免 offsetHeight 在 flex 佈局下產生增長循環
+    const H = h || parseInt(el.getAttribute('height')) || el.offsetHeight || 230;
     const dpr = window.devicePixelRatio || 1;
     el.width = W * dpr;
     el.height = H * dpr;
@@ -74,7 +75,7 @@ export function fillArea(ctx, data, count, xPx, yPx, color, alpha) {
 // ======== ROTARY / VIBE CHARTS ========
 
 export function drawPressureChart(progress, updateStatsCallback) {
-    const res = prepCanvas('pressure-chart'); // Remove fixed height
+    const res = prepCanvas('pressure-chart', 230); // 傳入固定高度
     if (!res) return;
     const { ctx, W, H } = res;
     const PAD = { l: 36, r: 16, t: 14, b: 32 };
@@ -112,7 +113,7 @@ export function drawPressureChart(progress, updateStatsCallback) {
 }
 
 export function drawCompareChart() {
-    const res = prepCanvas('compare-chart'); // Remove fixed height
+    const res = prepCanvas('compare-chart', 230); // 傳入固定高度
     if (!res) return;
     const { ctx, W, H } = res;
     const PAD = { l: 36, r: 16, t: 14, b: 32 };
@@ -135,7 +136,7 @@ export function drawCompareChart() {
 }
 
 export function drawConceptChart() {
-    const res = prepCanvas('concept-chart'); // Remove fixed height
+    const res = prepCanvas('concept-chart', 270); // 傳入固定高度
     if (!res) return;
     const { ctx, W, H } = res;
     ctx.fillStyle = '#161616'; ctx.fillRect(0, 0, W, H);
