@@ -1,0 +1,72 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+    <div class="footer-bottom">
+        <p>&copy; {year} Finer Fantasy. Designed & Developed by <a href="https://alvin-huang-portfolio.web.app/" target="_blank">Alvin</a>.</p>
+        <div class="coffee-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+            </svg>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background-color: transparent;
+        border-top: 1px solid rgba(255, 255, 255, 0.05); /* 更加細微的邊框 */
+        padding: 2rem 2rem;
+        margin-top: 2rem;
+    }
+
+    .footer-bottom {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--muted);
+        font-size: 0.75rem; /* 再次縮小字體 */
+        font-family: 'DM Mono', monospace;
+        letter-spacing: 0.02em;
+        opacity: 0.6; /* 增加透明度，達到「低調」效果 */
+    }
+
+    .footer-bottom a {
+        color: var(--muted);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: all 0.2s ease;
+    }
+
+    .footer-bottom a:hover {
+        color: var(--gold-dim);
+        border-bottom-color: var(--gold-dim);
+        opacity: 1;
+    }
+
+    .coffee-icon {
+        width: 16px;
+        height: 16px;
+        color: var(--muted);
+        opacity: 0.4;
+    }
+
+    @media (max-width: 768px) {
+        .footer {
+            padding: 1.5rem 1rem;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+    }
+</style>
