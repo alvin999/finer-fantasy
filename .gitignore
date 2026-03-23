@@ -31,3 +31,7 @@ server.pid
 *.png
 !*.png # Don't ignore images needed for UI if they exist
 !public/**/*.png # Don't ignore public assets
+
+# Astro
+.astro/
+.output/
