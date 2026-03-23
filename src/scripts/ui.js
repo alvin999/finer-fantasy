@@ -78,6 +78,7 @@ export function startAnimation(redrawRV) {
 
             updateNarrative(peak, dur);
             drawPuckAnimation(state.animProgress);
+            if (window.updatePuckR3F) window.updatePuckR3F(state.animProgress, state);
         });
 
         if (timeDisplay) {
@@ -111,6 +112,7 @@ export function stopAnimation(fin) {
         state.animProgress = 0;
         drawPressureChart(1, (peak, dur) => updateStats(peak, dur));
         drawPuckAnimation(0);
+        if (window.updatePuckR3F) window.updatePuckR3F(0, state);
         const rtEl = document.getElementById('stat-realtime');
         if (rtEl) rtEl.textContent = '0.0';
     }

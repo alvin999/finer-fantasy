@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { PuckSimulationD3 } from "../components/PuckSimulationD3";
 import "../styles.css";
 ---
 
@@ -221,15 +222,11 @@ import "../styles.css";
                         style="margin-top: 10px; background: #1a1a1a; border-radius: 8px; padding: 10px; overflow: hidden;"
                     >
                         <div
-                            style="font-size: 10px; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;"
+                            style="font-size: 10px; color: #888; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;"
                         >
-                            Live Cross-section Simulation
+                            Schematic Cross-section (D3 + Canvas)
                         </div>
-                        <canvas
-                            id="puck-animation"
-                            width="400"
-                            height="120"
-                            style="width: 100%; height: 120px;"></canvas>
+                        <PuckSimulationD3 client:only="react" />
                     </div>
 
                     <div class="stats-row">
@@ -357,6 +354,11 @@ import "../styles.css";
         import Chart from "chart.js/auto";
         (window as any).Chart = Chart;
 
-        import "../scripts/main.js";
+        import { state } from "../scripts/state.js";
+    // Initialize R3F / D3 component if available
+    if ((window as any).updatePuckR3F) {
+        (window as any).updatePuckR3F(0, (window as any).state);
+    }
+     import "../scripts/main.js";
     </script>
 </Layout>

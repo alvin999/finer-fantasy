@@ -190,6 +190,26 @@ import LearningEnding from "../components/learning/LearningEnding.astro";
                 gsap.set(".wdrop", { y: p * 60, opacity: p < 0.8 ? 0.6 : 0 });
                 gsap.set(".cdrip", { y: Math.max(0, (p - 0.4) * 30), opacity: p > 0.4 ? 0.7 : 0 });
                 gsap.set("#cup-fill", { height: p * 40, y: -p * 25 });
+                
+                // 漸層穿透感控制
+                // 濕潤部分 (stop2) 隨進度下移，模擬穿透
+                const stop2Offset = Math.min(100, p * 150); 
+                gsap.set("#stop2", { attr: { offset: `${stop2Offset}%` } });
+                gsap.set("#stop1", { attr: { offset: `${Math.max(0, stop2Offset - 20)}%` } });
+
+                // 粉餅底色隨阻力降低 (進度增加) 變得稍淺
+                const puckColor = gsap.utils.interpolate("#4a250d", "#6d3a1a", p);
+                gsap.set("#stop3", { attr: { "stop-color": puckColor } });
+
+                // 阻力箭頭亮度與寬度
+                const arrowOpacity = 0.7 * (1 - p * 0.5);
+                const arrowGlow = Math.max(0, 2 * (1 - p));
+                gsap.set("#resist-arrows line", { 
+                    strokeOpacity: arrowOpacity,
+                    scaleY: 1 - p * 0.3,
+                    transformOrigin: "center bottom"
+                });
+                gsap.set("#glow feGaussianBlur", { attr: { stdDeviation: arrowGlow } });
             }},
             { id: "#s3", viz: (p: number) => drawPuckCurve(p) },
             { id: "#s4", viz: (p: number) => drawWDChart(p) },

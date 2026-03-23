@@ -54,6 +54,7 @@ function redrawRV() {
     if (active.id === 'tab-pressure') {
         drawPressureChart(1, (peak, dur) => updateNarrative(peak, dur));
         drawPuckAnimation(0);
+        if (window.updatePuckR3F) window.updatePuckR3F(0, state);
     }
     if (active.id === 'tab-compare') drawCompareChart();
     if (active.id === 'tab-concept') drawConceptChart();

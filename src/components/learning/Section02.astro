@@ -32,7 +32,7 @@ import LearningSection from "./LearningSection.astro";
                 width="150"
                 height="100"
                 rx="2"
-                fill="rgba(90,45,15,0.8)"
+                fill="url(#puck-gradient)"
                 stroke="rgba(184,103,30,0.2)"
                 stroke-width="1"></rect>
             <!-- water droplets falling -->
@@ -63,6 +63,7 @@ import LearningSection from "./LearningSection.astro";
                     y2="30"
                     stroke="rgba(212,149,42,0.7)"
                     stroke-width="1.5"
+                    filter="url(#glow)"
                     marker-end="url(#arr)"></line>
                 <line
                     x1="80"
@@ -80,6 +81,15 @@ import LearningSection from "./LearningSection.astro";
                     stroke-width="1"></line>
             </g>
             <defs>
+                <linearGradient id="puck-gradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop id="stop1" offset="0%" stop-color="#2a1a0a"></stop>
+                    <stop id="stop2" offset="0%" stop-color="#5a2d0f"></stop>
+                    <stop id="stop3" offset="100%" stop-color="#4a250d"></stop>
+                </linearGradient>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="2" result="blur"></feGaussianBlur>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
+                </filter>
                 <marker
                     id="arr"
                     markerWidth="6"
