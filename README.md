@@ -1,6 +1,14 @@
 # Finer Fantasy - Espresso 萃取物理模擬器
 
+### 主畫面 (Main Simulator)
+![Main Simulator](./screenshots/screenshot1.png)
+
+### 概念導覽 (Concept Interactive Guide)
+![Concept Guide](./screenshots/screenshot2.png)
+
+
 ## ☕ 關於專案 (The Origins)
+
 
 「為什麼要叫 **Finer Fantasy**？」
 
