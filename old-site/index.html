@@ -11,6 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
         rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 
 <body>
@@ -24,6 +25,7 @@
             <button class="machine-tab active" onclick="switchMachine('rotary', this)">Rotary Pump</button>
             <button class="machine-tab" onclick="switchMachine('vibe', this)">Vibration Pump</button>
             <button class="machine-tab" onclick="switchMachine('synesso', this)">Synesso 變壓</button>
+            <button class="machine-tab highlight-tab" onclick="switchMachine('resistance', this)">粉餅阻力 (Demo)</button>
         </div>
     </header>
 
@@ -72,7 +74,7 @@
                     <div class="section-label">動畫控制</div>
                     <button class="animate-btn" id="animate-btn" onclick="toggleAnimation()">
                         <svg width="11" height="11" viewBox="0 0 14 14" fill="currentColor">
-                            <polygon id="play-icon" points="3,1 13,7 3,13" />
+                            <path id="play-icon" d="M3,1 L13,7 L3,13 Z" />
                         </svg>
                         <span id="animate-label">播放萃取過程</span>
                     </button>
@@ -183,6 +185,39 @@
                 </div>
 
             </div>
+            
+            <!-- RESISTANCE (NEW) -->
+            <div id="panel-resistance" style="display:none; flex-direction:column; gap:16px;">
+                <div class="panel-section">
+                    <div class="section-label">阻力動態說明</div>
+                    <div class="info-box">
+                        <strong>粉餅阻力</strong> 是水流穿過咖啡粉層時遇到的反向作用力。<br><br>
+                        這不是一個固定值。隨著萃取進行，粉餅結構會因為：<br>
+                        1. <strong>可溶物釋出</strong> → 阻力下降<br>
+                        2. <strong>細粉偏移</strong> → 阻力局部變化<br>
+                        3. <strong>通道效應</strong> → 阻力崩解
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="section-label">動畫序列</div>
+                    <div class="resistance-controls">
+                        <button class="animate-btn" onclick="playResistanceDemo()">
+                             <svg width="11" height="11" viewBox="0 0 14 14" fill="currentColor">
+                                <path d="M3,1 L13,7 L3,13 Z" />
+                            </svg>
+                            播放阻力演進 (GSAP)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="concept-box" style="background: rgba(200, 169, 110, 0.1); border-color: rgba(200, 169, 110, 0.3);">
+                    <div class="concept-title" style="color: var(--gold);">資深工程師視角</div>
+                    <p style="font-size: 13px; margin: 0; line-height: 1.5;">
+                        在 Remotion 中，我們可以透過 <code>interpolate</code> 函數，根據 <code>frame</code> 數字精確控制粉餅每一層的阻力衰減。
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- ===== RIGHT CHART AREA ===== -->
@@ -215,11 +250,22 @@
                         </div>
                     </div>
                     <canvas id="pressure-chart" height="230"></canvas>
+                    
+                    <!-- NEW: Puck Cross-section Animation -->
+                    <div class="puck-animation-container" style="margin-top: 10px; background: #1a1a1a; border-radius: 8px; padding: 10px; overflow: hidden;">
+                        <div style="font-size: 10px; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">Live Cross-section Simulation</div>
+                        <canvas id="puck-animation" width="400" height="120" style="width: 100%; height: 120px;"></canvas>
+                    </div>
                     <div class="stats-row">
                         <div class="stat-card">
                             <div class="stat-label">WD 值</div>
                             <div class="stat-value medium" id="stat-wd">80</div>
                             <div class="stat-desc">g / 10s</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">即時壓力</div>
+                            <div class="stat-value" id="stat-realtime">0.0</div>
+                            <div class="stat-desc">bar</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">峰值壓力</div>
@@ -359,10 +405,35 @@
                 <div class="narrative" id="synesso-narrative">調整左側壓力設定，觀察曲線與假想流速的變化。</div>
             </div>
 
+            <!-- RESISTANCE CHART AREA (NEW) -->
+            <div id="resistance-charts" style="display:none; flex-direction:column; gap:20px; align-items: center; justify-content: center; min-height: 400px;">
+                <div class="resistance-video-frame">
+                    <div class="video-label">Remotion Composition 模擬</div>
+                    <div id="resistance-stage">
+                        <!-- Animation layers will be injected here -->
+                        <div class="puck-layer" id="puck-layer">
+                            <div class="water-head" id="water-head"></div>
+                            <div class="puck-grains" id="puck-grains"></div>
+                        </div>
+                    </div>
+                    <div class="video-timeline">
+                        <div class="timeline-bar"><div id="timeline-progress"></div></div>
+                        <div class="timeline-stats">
+                            <span id="res-frame">Frame: 0</span>
+                            <span id="res-status">Status: IDLE</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="narrative" style="text-align: center; max-width: 500px;">
+                    上方區域模擬了 Remotion 如何將複雜的物理數據（粉餅阻力）轉化為動態影格。GSAP 負責處理補間動畫，呈現粉餅從「堅固」到「瓦解」的過程。
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script type="module" src="src/main.js"></script>
+    <script type="module" src="src/resistance.js"></script>
 </body>
 
 </html>

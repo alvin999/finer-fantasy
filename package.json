@@ -5,6 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
     "test": "node --experimental-vm-modules node_modules/.bin/jest tests/",
     "test:watch": "node --experimental-vm-modules node_modules/.bin/jest tests/ --watch"
   },
@@ -18,5 +23,18 @@
     "jest-canvas-mock": "^2.5.2",
     "jest-environment-jsdom": "^30.3.0",
     "jsdom": "^29.0.1"
+  },
+  "dependencies": {
+    "@astrojs/react": "^5.0.1",
+    "@remotion/cli": "^4.0.438",
+    "@remotion/player": "^4.0.438",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^5.18.1",
+    "chart.js": "^4.5.1",
+    "gsap": "^3.14.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remotion": "^4.0.438"
   }
 }

@@ -1,6 +1,6 @@
 import { state, PUMP_MAX, TOTAL_TIME, N } from './state.js';
-import { drawPressureChart, drawCompareChart, drawConceptChart, drawSynessoPressure, drawSynessoFlow } from './charts.js';
-import { mkCurve, synessoFlow } from './physics.js';
+import { drawPressureChart, drawCompareChart, drawConceptChart, drawSynessoPressure, drawSynessoFlow, drawPuckAnimation } from './charts.js';
+import { mkCurve, synessoFlow, actualPressure } from './physics.js';
 
 // ======== NARRATIVE (RV) ========
 
@@ -81,11 +81,11 @@ export function startAnimation(redrawRV) {
 
     if (animBtn) animBtn.classList.add('playing');
     if (animLabel) animLabel.textContent = '暫停';
-    if (playIcon) playIcon.setAttribute('points', '2,1 5,1 5,13 2,13 M9,1 12,1 12,13 9,13');
+    if (playIcon) playIcon.setAttribute('d', 'M2,1 L5,1 L5,13 L2,13 Z M9,1 L12,1 L12,13 L9,13 Z');
 
     function step() {
         if (!state.isPlaying) return;
-        state.animProgress = Math.min(state.animProgress + 1 / (N * 0.7), 1);
+        state.animProgress = Math.min(state.animProgress + 1 / (N * 2.0), 1);
         
         drawPressureChart(state.animProgress, (peak, dur) => {
             const peakEl = document.getElementById('stat-peak');
@@ -100,7 +100,14 @@ export function startAnimation(redrawRV) {
             if (durEl) durEl.textContent = dur.toFixed(1);
             if (wdEl) wdEl.textContent = state.currentWD;
             
+            const rtEl = document.getElementById('stat-realtime');
+            if (rtEl) {
+                const curP = actualPressure(state.animProgress * TOTAL_TIME, state.currentWD, state.currentMethod, state.currentMachine, state.headspace);
+                rtEl.textContent = curP.toFixed(1);
+            }
+
             updateNarrative(peak, dur);
+            drawPuckAnimation(state.animProgress);
         });
 
         if (timeDisplay) {
@@ -127,12 +134,15 @@ export function stopAnimation(fin) {
 
     if (animBtn) animBtn.classList.remove('playing');
     if (animLabel) animLabel.textContent = fin ? '重新播放' : '播放萃取過程';
-    if (playIcon) playIcon.setAttribute('points', '3,1 13,7 3,13');
+    if (playIcon) playIcon.setAttribute('d', 'M3,1 L13,7 L3,13 Z');
     if (timeDisplay) timeDisplay.textContent = fin ? '萃取完成 ✓' : '準備就緒';
     
     if (!fin) { 
         state.animProgress = 0; 
         drawPressureChart(1, (peak, dur) => updateStats(peak, dur)); 
+        drawPuckAnimation(0);
+        const rtEl = document.getElementById('stat-realtime');
+        if (rtEl) rtEl.textContent = '0.0';
     }
 }
 
@@ -149,5 +159,10 @@ function updateStats(peak, dur) {
     if (durEl) durEl.textContent = dur.toFixed(1);
     if (wdEl) wdEl.textContent = state.currentWD;
     
+    const rtEl = document.getElementById('stat-realtime');
+    if (rtEl) {
+        const curP = actualPressure(state.animProgress * TOTAL_TIME, state.currentWD, state.currentMethod, state.currentMachine, state.headspace);
+        rtEl.textContent = curP.toFixed(1);
+    }
     updateNarrative(peak, dur);
 }

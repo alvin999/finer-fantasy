@@ -268,3 +268,117 @@ export function drawSynessoFlow() {
     ctx.fillStyle = '#c8a96e'; ctx.textAlign = 'center';
     ctx.fillText('ESTIMATED', W / 2, H / 2 + 7); ctx.restore();
 }
+
+// ======== PUCK ANIMATION (CROSS-SECTION) ========
+
+/**
+ * 繪製萃取剖面圖動畫
+ * @param {number} progress 動畫進度 (0-1)
+ */
+export function drawPuckAnimation(progress) {
+    const res = prepCanvas('puck-animation', 120);
+    if (!res) return;
+    const { ctx, W, H } = res;
+    const t = progress * TOTAL_TIME;
+    
+    // 取得即時物理數據
+    const wd = state.currentWD;
+    const hs = state.headspace;
+    const p = actualPressure(t, wd, state.currentMethod, state.currentMachine, hs);
+    
+    // 計算 Headspace 填水程度
+    const volToFill = hs * 2.64;
+    const flowRate = wd / 10;
+    const delay = volToFill / flowRate;
+    const fillProgress = Math.min(1, t / delay);
+    
+    // 繪圖參數
+    const PAD = 20;
+    const basketW = W - PAD * 2;
+    const basketH = H - PAD * 2; // 總高度固定 (籃子深度)
+    const screenY = PAD;
+    
+    // 將 0.5~5.0mm 映射至畫布高度
+    // 假設 Headspace 越大，粉量 (puckHeight) 越小
+    const hsHeight = 8 + (hs - 0.5) * (32 / 4.5); // 8px ~ 40px
+    const puckHeight = basketH - hsHeight;
+    const puckY = screenY + hsHeight;
+    
+    // 1. 清空畫布
+    ctx.fillStyle = '#161616';
+    ctx.fillRect(0, 0, W, H);
+    
+    // 2. 繪製邊框 (Portafilter Basket)
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(PAD, screenY, basketW, basketH);
+    
+    
+    // 4. 繪製分水網 (Shower Screen)
+    ctx.fillStyle = '#888';
+    ctx.fillRect(PAD - 5, screenY - 2, basketW + 10, 4);
+    for (let i = 0; i < 15; i++) {
+        ctx.fillStyle = '#555';
+        ctx.fillRect(PAD + (i / 14) * basketW - 1, screenY - 1, 2, 2);
+    }
+    
+    // 5. 繪製水流 (Water Flow from Screen)
+    if (t > 0 && t < delay + 2) {
+        ctx.fillStyle = '#3498db';
+        ctx.globalAlpha = 0.6;
+        const particleCount = Math.floor(wd / 4);
+        for (let i = 0; i < particleCount; i++) {
+            const px = PAD + Math.random() * basketW;
+            const py = screenY + (Math.random() * hsHeight * Math.min(1, t / 0.5));
+            ctx.beginPath();
+            ctx.arc(px, py, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+    }
+    
+    // 6. 繪製 Headspace 中的水積累 (由上而下填滿)
+    if (fillProgress > 0) {
+        ctx.fillStyle = '#3498db';
+        ctx.globalAlpha = 0.45;
+        const waterHeight = hsHeight * fillProgress;
+        // 水流從分水網(screenY)向下延伸至填滿
+        ctx.fillRect(PAD + 2, screenY, basketW - 4, waterHeight);
+        ctx.globalAlpha = 1;
+    }
+
+    // 7. 繪製粉餅 (Puck) - 具有壓力傳遞效果的漸層
+    // 壓力由上往下傳導，頂部顏色較深，底部隨時間跟進
+    const grad = ctx.createLinearGradient(0, puckY, 0, puckY + puckHeight);
+    const topP = p;
+    // 假設壓力傳導有延遲，底部壓力落後頂部
+    const bottomP = Math.max(0, p * 0.7 - 1); 
+    
+    grad.addColorStop(0, `hsl(28, 40%, ${Math.max(8, 35 - topP * 3)}%)`);
+    grad.addColorStop(1, `hsl(28, 45%, ${Math.max(10, 38 - bottomP * 3)}%)`);
+    
+    ctx.fillStyle = grad;
+    ctx.fillRect(PAD + 2, puckY, basketW - 4, puckHeight - 2);
+    
+    // 8. 繪製萃取出的咖啡液 (Bottom of puck)
+    if (t > delay + 0.5) {
+        ctx.fillStyle = '#4e342e'; 
+        const dropCount = Math.floor(p * 1.5);
+        for (let i = 0; i < dropCount; i++) {
+            const dx = PAD + Math.random() * basketW;
+            const dy = H - PAD + (Math.random() * 10);
+            ctx.beginPath();
+            ctx.arc(dx, dy, 1.8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+    
+    // 9. 文字標示
+    ctx.fillStyle = '#aaa';
+    ctx.font = 'bold 9px DM Mono, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`HEADSPACE: ${hs}mm`, PAD + 5, puckY - 5);
+    ctx.textAlign = 'right';
+    ctx.fillText(`FLOW (WD): ${wd}`, W - PAD - 5, screenY + 12);
+    
+}

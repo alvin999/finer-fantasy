@@ -1,0 +1,59 @@
+---
+/* src/components/learning/Section04.astro */
+import LearningSection from "./LearningSection.astro";
+---
+
+<LearningSection id="s4" num="04" tag="WD 值的影響">
+    <p slot="text" class="big-text">
+        <em>WD 值越高</em>，<br />實際壓力<b>越快追上</b><br />假想粉餅曲線
+    </p>
+    <div slot="viz" id="viz-wd-chart">
+        <div class="chart-container">
+            <p class="chart-title">實際壓力 vs 假想曲線</p>
+            <div class="curve-legend">
+                <div class="legend-item">
+                    <div
+                        class="legend-dot"
+                        style="background:rgba(184,103,30,0.4);border-top:1px dashed var(--muted)"
+                    >
+                    </div>假想曲線
+                </div>
+                <div class="legend-item">
+                    <div
+                        class="legend-dot"
+                        style="background:var(--amber)"
+                    >
+                    </div>高 WD
+                </div>
+                <div class="legend-item">
+                    <div
+                        class="legend-dot"
+                        style="background:var(--muted)"
+                    >
+                    </div>低 WD
+                </div>
+            </div>
+            <canvas class="chart-canvas" id="wd-canvas" height="180"></canvas>
+        </div>
+    </div>
+</LearningSection>
+
+<style>
+    .curve-legend {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 0.8rem;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "DM Mono", monospace;
+        font-size: 10px;
+        color: var(--muted);
+    }
+    .legend-dot {
+        width: 24px;
+        height: 2px;
+    }
+</style>

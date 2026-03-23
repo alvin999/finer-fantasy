@@ -10,14 +10,22 @@
     --muted: #6b6258;
 
     /* Font Scale (Base 16px) */
-    --fs-xs: 0.75rem;   /* 12px */
-    --fs-sm: 0.875rem;  /* 14px */
-    --fs-base: 1rem;    /* 16px */
-    --fs-lg: 1.125rem;  /* 18px */
-    --fs-xl: 1.25rem;   /* 20px */
-    --fs-2xl: 1.5rem;   /* 24px */
-    --fs-3xl: 2.25rem;  /* 36px */
-    --fs-4xl: 3rem;     /* 48px */
+    --fs-xs: 0.75rem;
+    /* 12px */
+    --fs-sm: 0.875rem;
+    /* 14px */
+    --fs-base: 1rem;
+    /* 16px */
+    --fs-lg: 1.125rem;
+    /* 18px */
+    --fs-xl: 1.25rem;
+    /* 20px */
+    --fs-2xl: 1.5rem;
+    /* 24px */
+    --fs-3xl: 2.25rem;
+    /* 36px */
+    --fs-4xl: 3rem;
+    /* 48px */
 
     /* Line Heights */
     --lh-tight: 1.2;
@@ -131,6 +139,12 @@ header {
     gap: 12px;
     /* Compacted */
     overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE & Edge */
+}
+
+.panel::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, etc */
 }
 
 .panel-section {
@@ -304,82 +318,6 @@ input[type=range]:hover::-webkit-slider-thumb {
     color: var(--gold);
 }
 
-/* Synesso stage sliders */
-.stage-row {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    margin-bottom: 10px;
-}
-
-.stage-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.stage-name {
-    font-family: 'DM Mono', monospace;
-    font-size: var(--fs-lg);
-    /* Doubled from 9-10px */
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-}
-
-.stage-val {
-    font-family: 'DM Mono', monospace;
-    font-size: var(--fs-xl);
-    font-weight: 500;
-}
-
-.stage-bar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.stage-bar input {
-    flex: 1;
-}
-
-.stage-bar .bar-unit {
-    font-family: 'DM Mono', monospace;
-    font-size: var(--fs-xs);
-    color: var(--muted);
-    width: 22px;
-    text-align: right;
-}
-
-/* Valve link indicator */
-.valve-link {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 2px 0 8px 0;
-    font-family: 'DM Mono', monospace;
-    font-size: var(--fs-xs);
-    color: var(--muted);
-}
-
-.valve-link::before,
-.valve-link::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-}
-
-.valve-badge {
-    padding: 4px 12px;
-    border: 1px solid #7a6540;
-    border-radius: 4px;
-    background: rgba(200, 169, 110, 0.07);
-    color: var(--gold-dim);
-    font-size: var(--fs-base);
-    white-space: nowrap;
-}
-
 .concept-box {
     background: var(--surface2);
     border: 1px solid var(--border);
@@ -390,7 +328,6 @@ input[type=range]:hover::-webkit-slider-thumb {
 .concept-title {
     font-family: 'DM Mono', monospace;
     font-size: var(--fs-lg);
-    /* Doubled from 9-10px */
     color: var(--gold-dim);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -409,7 +346,6 @@ input[type=range]:hover::-webkit-slider-thumb {
 .concept-tag {
     font-family: 'DM Mono', monospace;
     font-size: var(--fs-sm);
-    /* Doubled from 8-9px */
     padding: 3px 10px;
     border-radius: 3px;
     flex-shrink: 0;
@@ -428,21 +364,14 @@ input[type=range]:hover::-webkit-slider-thumb {
     border: 1px solid rgba(52, 152, 219, 0.3);
 }
 
-.concept-tag.synesso {
-    background: rgba(200, 169, 110, 0.15);
-    color: var(--gold);
-    border: 1px solid rgba(200, 169, 110, 0.3);
-}
-
 /* RIGHT */
 .chart-area {
     padding: 18px 26px;
     display: flex;
     flex-direction: column;
     gap: 14px;
-    overflow: hidden;
+    overflow-y: auto; /* Allow scrolling on right side */
     min-height: 0;
-    /* CRITICAL: allow grid item to shrink */
 }
 
 .sub-tabs {
@@ -481,7 +410,7 @@ input[type=range]:hover::-webkit-slider-thumb {
     flex-direction: column;
     gap: 12px;
     flex: 1;
-    overflow: hidden;
+    overflow-y: visible; /* Content can push parent to overflow */
     padding-right: 0;
     min-height: 0;
 }
@@ -525,8 +454,8 @@ canvas {
     width: 100%;
     flex: 1;
     min-height: 80px;
-    max-height: 500px;
-    /* Limit height growth on wide screens */ 
+    max-height: 300px;
+    /* Limit height growth on wide screens */
     border: 1px solid var(--border);
     border-radius: 4px;
     background: var(--surface);
@@ -535,7 +464,7 @@ canvas {
 
 .stats-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 8px;
     flex-shrink: 0;
     /* Prevent compression */
@@ -619,19 +548,6 @@ small {
     margin-bottom: 4px;
 }
 
-.estimated-badge {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: var(--fs-xs);
-    padding: 2px 7px;
-    border-radius: 2px;
-    background: rgba(200, 169, 110, 0.1);
-    border: 1px solid rgba(200, 169, 110, 0.25);
-    color: var(--gold-dim);
-    letter-spacing: 0.05em;
-    margin-left: 8px;
-}
-
 .concept-notes {
     margin-top: 6px;
     font-size: var(--fs-xs);
@@ -639,27 +555,110 @@ small {
     line-height: var(--lh-base);
 }
 
-.dual-chart {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 0;
-    max-height: 480px;
-    /* Limit total height for both charts */
-    flex: 1;
+/* RESISTANCE PAGE (NEW) */
+.highlight-tab {
+    border-color: var(--gold) !important;
+    color: var(--gold) !important;
 }
 
-/* Sub-containers for synesso charts */
-.dual-chart>div {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
+.resistance-video-frame {
+    width: 100%;
+    max-width: 600px;
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto; /* Center it */
 }
 
-.dual-chart canvas {
-    flex: 1;
-    min-height: 0;
-    max-height: none;
-    /* Let the container's flex/max-h handle it */
+.video-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+#resistance-stage {
+    width: 100%;
+    height: 260px;
+    background: #111;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.puck-layer {
+    width: 200px;
+    height: 120px;
+    border: 2px solid #444;
+    border-top: none;
+    position: relative;
+    background: rgba(255,255,255,0.02);
+}
+
+#water-head {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0px;
+    background: linear-gradient(to bottom, rgba(52, 152, 219, 0.8), rgba(52, 152, 219, 0.4));
+    z-index: 2;
+    transform-origin: top;
+}
+
+#puck-grains {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 1px;
+    padding: 2px;
+}
+
+.grain {
+    background: #3d2b1f;
+    border-radius: 1px;
+}
+
+.video-timeline {
+    margin-top: 20px;
+}
+
+.timeline-bar {
+    width: 100%;
+    height: 4px;
+    background: #222;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+#timeline-progress {
+    width: 0%;
+    height: 100%;
+    background: var(--gold);
+}
+
+.timeline-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #666;
+}
+
+.resistance-controls {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }

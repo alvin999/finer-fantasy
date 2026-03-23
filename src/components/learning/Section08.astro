@@ -1,0 +1,16 @@
+---
+/* src/components/learning/Section08.astro */
+import LearningSection from "./LearningSection.astro";
+---
+
+<LearningSection id="s8" num="09" tag="差異尺度">
+    <p slot="text" class="big-text">
+        填壓的影響<br />比 WD 值<b>更為微妙</b><br />需要 <em>A/B Test</em> 才能感受
+    </p>
+    <div slot="viz" id="viz-abtest">
+        <div class="chart-container">
+            <p class="chart-title">影響力比較</p>
+            <canvas class="chart-canvas" id="ab-canvas" height="180"></canvas>
+        </div>
+    </div>
+</LearningSection>

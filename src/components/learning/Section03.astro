@@ -1,0 +1,42 @@
+---
+/* src/components/learning/Section03.astro */
+import LearningSection from "./LearningSection.astro";
+---
+
+<LearningSection id="s3" num="03" tag="核心概念" wide={true}>
+    <div slot="text">
+        <p class="big-text">
+            我們可以假想一條<br /><em>粉餅壓力曲線</em><br />從 <b>15 bar</b> 緩降至 <b>6 bar</b>
+        </p>
+        <p class="sub-text">
+            （實際阻力會因研磨粗細與粉量不同而有所差異）
+        </p>
+    </div>
+    <div slot="viz" id="viz-curve" style="margin-top:2.5rem;transform:translateY(20px)">
+        <div class="chart-container">
+            <p class="chart-title">假想粉餅壓力曲線</p>
+            <canvas class="chart-canvas" id="puck-canvas" height="200"></canvas>
+            <div style="display:flex;justify-content:space-between;margin-top:8px">
+                <span class="chart-axis-label">萃取開始</span>
+                <span class="chart-axis-label">萃取結束</span>
+            </div>
+        </div>
+    </div>
+</LearningSection>
+
+<style>
+    .sub-text {
+        margin-top: 1rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+        letter-spacing: 0.1em;
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    .chart-axis-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 9px;
+        color: var(--muted);
+        letter-spacing: 0.2em;
+    }
+</style>

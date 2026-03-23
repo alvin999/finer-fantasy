@@ -1,0 +1,33 @@
+# Dependency directories
+node_modules/
+remotion-puck/node_modules/
+
+# Build outputs
+dist/
+out/
+remotion-puck/out/
+
+# IDE and OS files
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary and log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+create-video-help.txt
+server.pid
+
+# Media files (optional, depends if you want to store renders in git)
+*.mp4
+*.jpeg
+*.png
+!*.png # Don't ignore images needed for UI if they exist
+!public/**/*.png # Don't ignore public assets

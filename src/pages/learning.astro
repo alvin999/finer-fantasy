@@ -1,0 +1,222 @@
+---
+import Layout from "../layouts/Layout.astro";
+import LearningParticles from "../components/learning/LearningParticles.astro";
+import LearningNav from "../components/learning/LearningNav.astro";
+import LearningHero from "../components/learning/LearningHero.astro";
+import Section01 from "../components/learning/Section01.astro";
+import Section02 from "../components/learning/Section02.astro";
+import Section03 from "../components/learning/Section03.astro";
+import Section04 from "../components/learning/Section04.astro";
+import Section05 from "../components/learning/Section05.astro";
+import Section06 from "../components/learning/Section06.astro";
+import Section06b from "../components/learning/Section06b.astro";
+import Section07 from "../components/learning/Section07.astro";
+import Section08 from "../components/learning/Section08.astro";
+import LearningEnding from "../components/learning/LearningEnding.astro";
+---
+
+<Layout title="假想粉餅阻力 — 互動說明">
+    <link
+        slot="head"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+        rel="stylesheet"
+    />
+    <div id="prog"></div>
+    
+    <LearningParticles />
+    <LearningNav />
+
+    <LearningHero />
+    <Section01 />
+
+    <div class="sep"></div>
+    <Section02 />
+
+    <div class="sep"></div>
+    <Section03 />
+
+    <div class="sep"></div>
+    <Section04 />
+
+    <div class="sep"></div>
+    <Section05 />
+
+    <div class="sep"></div>
+    <Section06 />
+
+    <div class="sep"></div>
+    <Section06b />
+
+    <div class="sep"></div>
+    <Section07 />
+
+    <div class="sep"></div>
+    <Section08 />
+
+    <div class="sep"></div>
+    <LearningEnding />
+
+    <a href="/" class="back-link">← 返回</a>
+</Layout>
+
+<style is:global>
+    :root {
+        --ink: #0d0906;
+        --cream: #f2ece0;
+        --warm: #e8dfc8;
+        --caramel: #b8671e;
+        --gold: #d4952a;
+        --amber: #f0b84a;
+        --rust: #7a3012;
+        --muted: #7d6848;
+        --faint: rgba(184, 103, 30, 0.12);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: var(--ink);
+        color: var(--cream);
+        overflow-x: hidden;
+    }
+
+    #prog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--rust), var(--amber));
+        z-index: 999;
+    }
+
+    .sep {
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(184, 103, 30, 0.2),
+            transparent
+        );
+    }
+
+    .back-link {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        color: var(--gold);
+        text-decoration: none;
+        font-family: "DM Mono", monospace;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+    import { 
+        drawPuckCurve, 
+        drawWDChart, 
+        drawDurChart, 
+        drawHSChart, 
+        drawABChart 
+    } from "../scripts/learning-utils";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── PROGRESS ──
+    const handleScroll = () => {
+        const progEl = document.getElementById("prog");
+        if (progEl) {
+            const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            progEl.style.width = pct + "%";
+        }
+        
+        document.querySelectorAll("section").forEach((s, i) => {
+            const rect = s.getBoundingClientRect();
+            if (rect.top <= window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
+                document.querySelectorAll(".dot").forEach((d) => d.classList.remove("active"));
+                const dots = document.querySelectorAll(".dot");
+                if (dots[i]) dots[i].classList.add("active");
+            }
+        });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    document.querySelectorAll(".dot").forEach((d) => {
+        d.addEventListener("click", () => {
+            const target = (d as HTMLElement).dataset.target;
+            if (target) document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
+        });
+    });
+
+    // ── GSAP ANIMATIONS ──
+    document.addEventListener("DOMContentLoaded", () => {
+        // Hero Reveal
+        gsap.to(".kicker, .hero-h, .hero-sub, .scroll-arrow", { 
+            opacity: 1, 
+            y: 0, 
+            duration: 1.2, 
+            stagger: 0.15, 
+            ease: "power3.out" 
+        });
+
+        const heroTl = gsap.timeline({ 
+            scrollTrigger: { 
+                trigger: "#hero", 
+                start: "top top", 
+                end: "bottom top", 
+                scrub: 1, 
+                onRefresh: (self) => { 
+                    if (self.progress === 0) gsap.set(".hero-h, .hero-sub, .kicker, .scroll-arrow", { opacity: 1, y: 0 }); 
+                }
+            }
+        });
+        heroTl.to(".hero-h", { y: -100, opacity: 0, scale: 0.9 }, 0);
+        heroTl.to(".hero-sub, .kicker, .scroll-arrow", { y: -50, opacity: 0 }, 0.2);
+        heroTl.to(".hero-ring", { scale: 1.5, opacity: 0, stagger: 0.1 }, 0);
+
+        // Section Specific Animations
+        const sections = [
+            { id: "#s1", viz: (p: number) => { const pl = (window as any).remotionGauge; if (pl) pl.seekTo(Math.round(p * 300)); }},
+            { id: "#s2", viz: (p: number) => { 
+                gsap.set(".wdrop", { y: p * 60, opacity: p < 0.8 ? 0.6 : 0 });
+                gsap.set(".cdrip", { y: Math.max(0, (p - 0.4) * 30), opacity: p > 0.4 ? 0.7 : 0 });
+                gsap.set("#cup-fill", { height: p * 40, y: -p * 25 });
+            }},
+            { id: "#s3", viz: (p: number) => drawPuckCurve(p) },
+            { id: "#s4", viz: (p: number) => drawWDChart(p) },
+            { id: "#s5", viz: (p: number) => drawDurChart(p) },
+            { id: "#s6", viz: (p: number) => { gsap.set("#wd-hi-fill", { scaleY: p }); gsap.set("#wd-lo-fill", { scaleY: p * 0.8 }); }},
+            { id: "#s6b", viz: (p: number) => drawHSChart(p) },
+            { id: "#s7", viz: (p: number) => { 
+                gsap.set("#tamp-h-curve, #tamp-l-curve", { strokeDashoffset: 200 * (1 - p) });
+            }},
+            { id: "#s8", viz: (p: number) => drawABChart(p) }
+        ];
+
+        sections.forEach(s => {
+            const tl = gsap.timeline({ scrollTrigger: { trigger: s.id, start: "top 85%", end: "top 15%", scrub: 1 }});
+            tl.to(`${s.id} .tag`, { opacity: 1, x: 0 }, 0.1);
+            tl.to(`${s.id} .line`, { opacity: 1, scaleX: 1 }, 0.2);
+            tl.to(`${s.id} .big-text`, { opacity: 1, y: 0 }, 0.3);
+            if (document.querySelector(`${s.id} .sub-text`))
+                tl.to(`${s.id} .sub-text`, { opacity: 1, y: 0 }, 0.4);
+            tl.to({}, { onUpdate: function() { s.viz(this.progress()); }, duration: 1 }, 0);
+        });
+
+        // Ending Reveal
+        gsap.to(".end-title, .end-sub, .end-rule", { 
+            scrollTrigger: { trigger: "#ending", start: "top 85%", end: "top 40%", scrub: 1 }, 
+            opacity: 1, 
+            y: 0 
+        });
+    });
+</script>

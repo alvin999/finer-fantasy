@@ -1,0 +1,77 @@
+---
+/* src/components/learning/LearningEnding.astro */
+---
+
+<section id="ending">
+    <div
+        class="s-num"
+        style="right:auto;left:4vw;bottom:-0.1em;color:rgba(184,103,30,0.04);font-size:clamp(100px,18vw,260px)"
+    >
+        ∞
+    </div>
+    <div class="end-rule"></div>
+    <h2 class="end-title">
+        假想粉餅阻力<br /><span style="color:var(--caramel)">是讀懂壓力的語言</span>
+    </h2>
+    <p class="end-sub">
+        均勻度影響曲線形狀<br />WD 值決定曲線高低<br />每次萃取，都是一條獨特的故事
+    </p>
+    <div class="end-rule"></div>
+
+    <!-- 返回按鈕 -->
+    <a href="/" class="back-link-bottom">返回主程式</a>
+</section>
+
+<style>
+    #ending {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 5rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .end-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(42px, 8vw, 120px);
+        opacity: 0;
+        transform: translateY(50px);
+        line-height: 1.1;
+    }
+    .end-sub {
+        margin-top: 1.5rem;
+        color: var(--muted);
+        opacity: 0;
+    }
+    .end-rule {
+        width: 1px;
+        height: 80px;
+        background: linear-gradient(to bottom, var(--caramel), transparent);
+        margin: 3rem auto;
+        opacity: 0;
+    }
+    .back-link-bottom {
+        display: inline-block;
+        margin-top: 2rem;
+        color: var(--gold);
+        text-decoration: none;
+        border: 1px solid var(--gold);
+        padding: 12px 32px;
+        border-radius: 30px;
+        transition: all 0.3s;
+    }
+    .back-link-bottom:hover {
+        background: rgba(212, 149, 42, 0.1);
+        transform: translateY(-2px);
+    }
+    .s-num {
+        font-family: "Bebas Neue", sans-serif;
+        line-height: 1;
+        position: absolute;
+        user-select: none;
+        pointer-events: none;
+    }
+</style>

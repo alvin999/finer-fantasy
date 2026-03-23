@@ -1,0 +1,18 @@
+---
+/* src/components/learning/Section01.astro */
+import LearningSection from "./LearningSection.astro";
+import { RemotionGauge } from "../RemotionGauge";
+---
+
+<LearningSection id="s1" num="01" tag="基礎認識">
+    <p slot="text" class="big-text">
+        咖啡萃取中，<br /><b>粉餅阻力不是固定的</b>
+    </p>
+    <div slot="viz" id="viz-machine">
+        <RemotionGauge client:only="react" />
+    </div>
+</LearningSection>
+
+<style is:global>
+    /* Section 專屬樣式（如果有的話） */
+</style>

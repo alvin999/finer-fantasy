@@ -1,0 +1,74 @@
+---
+/* src/components/learning/Section06.astro */
+import LearningSection from "./LearningSection.astro";
+---
+
+<LearningSection id="s6" num="06" tag="風味結果" wide={true}>
+    <p slot="text" class="big-text">WD 值，決定了<em>風味的鮮明程度</em></p>
+    <div slot="viz" id="viz-wd-bars" style="transform:translateY(20px);margin-top:2rem">
+        <div class="wd-wrap">
+            <div class="wd-col hi">
+                <span class="wd-label">WD 高</span>
+                <div class="wd-track">
+                    <div class="wd-fill" id="wd-hi-fill"></div>
+                </div>
+                <p class="wd-desc">
+                    整體壓力偏高<br />風味特質鮮明銳利<br />層次感突出
+                </p>
+            </div>
+            <div class="wd-col lo">
+                <span class="wd-label">WD 低</span>
+                <div class="wd-track">
+                    <div class="wd-fill" id="wd-lo-fill"></div>
+                </div>
+                <p class="wd-desc">
+                    壓力溫和緩升<br />風味柔和圓潤<br />口感融合
+                </p>
+            </div>
+        </div>
+    </div>
+</LearningSection>
+
+<style>
+    .wd-wrap {
+        display: flex;
+        gap: 2rem;
+    }
+    .wd-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    .wd-label {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 24px;
+        color: var(--amber);
+    }
+    .wd-track {
+        height: 180px;
+        background: rgba(61, 31, 13, 0.3);
+        border: 1px solid rgba(184, 103, 30, 0.15);
+        position: relative;
+    }
+    .wd-fill {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: linear-gradient(to top, var(--rust), var(--amber));
+        transform: scaleY(0);
+        transform-origin: bottom;
+    }
+    #wd-hi-fill {
+        height: 82%;
+    }
+    #wd-lo-fill {
+        height: 45%;
+        background: var(--muted);
+    }
+    .wd-desc {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.4;
+    }
+</style>

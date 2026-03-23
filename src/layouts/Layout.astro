@@ -1,0 +1,74 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-TW">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+<style is:global>
+	:root {
+		--bg: #0d0d0d;
+		--surface: #161616;
+		--surface2: #1f1f1f;
+		--border: #2a2a2a;
+		--cream: #e8dcc8;
+		--gold: #c8a96e;
+		--gold-dim: #7a6540;
+		--text: #d4c8b4;
+		--muted: #6b6258;
+		--fs-xs: 0.75rem;
+		--fs-sm: 0.875rem;
+		--fs-base: 1rem;
+		--fs-lg: 1.125rem;
+		--fs-xl: 1.25rem;
+		--fs-2xl: 1.5rem;
+		--fs-3xl: 2.25rem;
+		--fs-4xl: 3rem;
+		--lh-tight: 1.2;
+		--lh-base: 1.5;
+		--lh-relaxed: 1.6;
+	}
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	body {
+		background: var(--bg);
+		color: var(--text);
+		font-family: 'Noto Serif TC', serif;
+		font-size: var(--fs-base);
+		line-height: var(--lh-base);
+		min-height: 100vh;
+	}
+
+	body::before {
+		content: '';
+		position: fixed;
+		inset: 0;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+		pointer-events: none;
+		z-index: 1000;
+		opacity: 0.4;
+	}
+</style>

@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { drawPressureChart, drawCompareChart, drawConceptChart, drawSynessoPressure, drawSynessoFlow } from './charts.js';
+import { drawPressureChart, drawCompareChart, drawConceptChart, drawSynessoPressure, drawSynessoFlow, drawPuckAnimation } from './charts.js';
 import { updateNarrative, updateSynessoStats, toggleAnimation, stopAnimation } from './ui.js';
 
 // 將需要被 HTML 內聯屬性 (如 onclick) 呼叫的函數掛載到 window
@@ -9,10 +9,15 @@ window.switchMachine = function(machine, btn) {
     btn.classList.add('active');
     
     const isSyn = machine === 'synesso';
-    document.getElementById('panel-rv').style.display = isSyn ? 'none' : '';
+    const isRes = machine === 'resistance';
+    
+    document.getElementById('panel-rv').style.display = (isSyn || isRes) ? 'none' : '';
     document.getElementById('panel-synesso').style.display = isSyn ? 'flex' : 'none';
-    document.getElementById('subtabs-rv').style.display = isSyn ? 'none' : '';
+    document.getElementById('panel-resistance').style.display = isRes ? 'flex' : 'none';
+    
+    document.getElementById('subtabs-rv').style.display = (isSyn || isRes) ? 'none' : '';
     document.getElementById('synesso-charts').style.display = isSyn ? 'flex' : 'none';
+    document.getElementById('resistance-charts').style.display = isRes ? 'flex' : 'none';
     
     if (!state.isPlaying) {
         setTimeout(() => { 
@@ -84,7 +89,10 @@ window.toggleAnimation = function() {
 function redrawRV() {
     const active = document.querySelector('.tab-content.active');
     if (!active) return;
-    if (active.id === 'tab-pressure') drawPressureChart(1, (peak, dur) => updateNarrative(peak, dur));
+    if (active.id === 'tab-pressure') {
+        drawPressureChart(1, (peak, dur) => updateNarrative(peak, dur));
+        drawPuckAnimation(0);
+    }
     if (active.id === 'tab-compare') drawCompareChart();
     if (active.id === 'tab-concept') drawConceptChart();
 }
@@ -92,6 +100,7 @@ function redrawRV() {
 // 初始化
 function initAll() {
     drawPressureChart(1, (peak, dur) => updateNarrative(peak, dur)); 
+    drawPuckAnimation(0);
     drawCompareChart(); 
     drawConceptChart();
     drawSynessoPressure(); 
