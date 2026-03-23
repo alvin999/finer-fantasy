@@ -35,10 +35,28 @@
         background: rgba(184, 103, 30, 0.3);
         cursor: pointer;
         transition: all 0.3s;
+        position: relative;
+    }
+
+    .dot::after {
+        content: '';
+        position: absolute;
+        inset: -10px;
     }
 
     :global(.dot.active) {
         background: var(--caramel);
         transform: scale(1.5);
+    }
+
+    @media (max-width: 600px) {
+        #nav {
+            right: 12px;
+            gap: 16px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+        }
     }
 </style>

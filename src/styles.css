@@ -45,10 +45,10 @@ body {
     font-family: 'Noto Serif TC', serif;
     font-size: var(--fs-base);
     line-height: var(--lh-base);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 body::before {
@@ -661,4 +661,88 @@ small {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+/* RWD MEDIA QUERIES */
+
+@media (max-width: 900px) {
+    body {
+        height: auto;
+        overflow-y: auto;
+    }
+
+    header {
+        flex-direction: column;
+        padding: 16px 20px;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .machine-tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .main {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+    }
+
+    .panel {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        overflow-y: visible;
+        padding: 20px;
+    }
+
+    .chart-area {
+        padding: 20px;
+        height: auto;
+        overflow: visible;
+    }
+
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stat-card:last-child {
+        grid-column: span 2;
+    }
+
+    .header-text h1 {
+        font-size: var(--fs-2xl);
+    }
+}
+
+@media (max-width: 600px) {
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .chart-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .legend {
+        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .sub-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: none;
+    }
+    
+    .sub-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sub-tab {
+        padding: 8px 12px;
+    }
 }
