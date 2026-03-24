@@ -1,0 +1,374 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { PuckSimulationD3 } from "../../components/PuckSimulationD3";
+import Footer from "../../components/Footer.astro";
+import "../../styles.css";
+import { languages } from "../../i18n/ui";
+import { useTranslations } from "../../i18n/utils";
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+---
+
+<Layout title={t('learning.title')} lang={lang}>
+    <header>
+        <div class="header-text">
+            <h1>{t('header.title')}</h1>
+            <p>{t('header.subtitle')}</p>
+        </div>
+        <div class="header-actions">
+            <div class="lang-switcher">
+                {Object.entries(languages).map(([code, label]) => (
+                    <a 
+                        href={`/finer-fantasy/${code}/`} 
+                        class={`lang-link ${lang === code ? 'active' : ''}`}
+                    >
+                        {label}
+                    </a>
+                ))}
+            </div>
+            <div class="machine-tabs">
+                <button
+                    class="machine-tab active"
+                    onclick="switchMachine('rotary', this)">{t('machine.rotary')}</button
+                >
+                <button class="machine-tab" onclick="switchMachine('vibe', this)"
+                    >{t('machine.vibe')}</button
+                >
+                <a
+                    href={`/finer-fantasy/${lang}/learning`}
+                    class="machine-tab highlight-tab"
+                    style="text-decoration:none;">{t('nav.learning')}</a
+                >
+            </div>
+        </div>
+    </header>
+
+    <div class="main">
+        <!-- ===== LEFT PANEL ===== -->
+        <div class="panel">
+            <div id="panel-rv">
+                <div class="panel-section">
+                    <div class="section-label">{t('slider.wd')}</div>
+                    <div>
+                        <div class="slider-header">
+                            <span class="slider-name">{t('slider.wd.label')}</span>
+                            <span
+                                ><span class="slider-value" id="wd-display"
+                                    >80</span
+                                ><span class="slider-unit"> g/10s</span></span
+                              >
+                        </div>
+                        <input
+                            type="range"
+                            id="wd-slider"
+                            min="60"
+                            max="100"
+                            step="1"
+                            value="80"
+                        />
+                        <div class="slider-hints">
+                            <span>60 {t('slider.wd.low')}</span><span>80 {t('slider.wd.normal')}</span><span
+                                >100 {t('slider.wd.high')}</span
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-section" style="margin-top:4px;">
+                    <div class="section-label">{t('slider.hs')}</div>
+                    <div>
+                        <div class="slider-header">
+                            <span class="slider-name">{t('slider.hs.label')}</span>
+                            <span
+                                ><span class="slider-value" id="hs-display"
+                                    >2.0</span
+                                ><span class="slider-unit"> mm</span></span
+                            >
+                        </div>
+                        <input
+                            type="range"
+                            id="hs-slider"
+                            min="1"
+                            max="5"
+                            step="0.5"
+                            value="2"
+                        />
+                        <div class="slider-hints">
+                            <span>1mm {t('slider.hs.tight')}</span><span>2mm {t('slider.hs.standard')}</span><span
+                                >5mm {t('slider.hs.loose')}</span
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section" style="margin-top:4px;">
+                    <div class="section-label">{t('method.label')}</div>
+                    <div class="toggle-group" id="rv-methods">
+                        <button
+                            class="toggle-btn active"
+                            onclick="setMethod('normal', this)"
+                            >{t('method.normal')}</button
+                        >
+                        <button
+                            class="toggle-btn"
+                            onclick="setMethod('heavy', this)">{t('method.heavy')}</button
+                        >
+                        <button
+                            class="toggle-btn"
+                            onclick="setMethod('uneven', this)"
+                            >{t('method.uneven')}</button
+                        >
+                    </div>
+                </div>
+
+                <div class="panel-section" style="margin-top:4px;">
+                    <div class="section-label">{t('anim.control')}</div>
+                    <button
+                        class="animate-btn"
+                        id="animate-btn"
+                        onclick="toggleAnimation()"
+                    >
+                        <svg
+                            width="11"
+                            height="11"
+                            viewBox="0 0 14 14"
+                            fill="currentColor"
+                        >
+                            <path id="play-icon" d="M3,1 L13,7 L3,13 Z"></path>
+                        </svg>
+                        <span id="animate-label">{t('anim.play')}</span>
+                    </button>
+                    <div class="time-display" id="time-display">{t('anim.ready')}</div>
+                </div>
+
+                <div class="panel-section" style="margin-top:4px;">
+                    <div class="section-label">{t('info.label')}</div>
+                    <div class="info-box" id="info-box" set:html={t('info.wd')}>
+                    </div>
+                </div>
+
+                <div class="panel-section" style="margin-top:4px;">
+                    <div class="concept-box">
+                        <div class="concept-title">{t('concept.title')}</div>
+                        <div class="concept-row">
+                            <span class="concept-tag rotary">Rotary</span><span
+                                >{t('concept.rotary')}</span
+                            >
+                        </div>
+                        <div class="concept-row">
+                            <span class="concept-tag vibe">Vibration</span><span
+                                >{t('concept.vibe')}</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== RIGHT CHART AREA ===== -->
+        <div class="chart-area">
+            <div id="subtabs-rv">
+                <div class="sub-tabs">
+                    <div
+                        class="sub-tab active"
+                        onclick="switchSubTab('pressure', this)"
+                    >
+                        {t('tab.pressure')}
+                    </div>
+                    <div
+                        class="sub-tab"
+                        onclick="switchSubTab('compare', this)"
+                    >
+                        {t('tab.compare')}
+                    </div>
+                    <div
+                        class="sub-tab"
+                        onclick="switchSubTab('concept', this)"
+                    >
+                        {t('tab.concept')}
+                    </div>
+                </div>
+
+                <div
+                    class="tab-content active"
+                    id="tab-pressure"
+                    style="margin-top:14px;"
+                >
+                    <div class="chart-header">
+                        <div class="chart-title">{t('chart.pressure_vs_time')}</div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div
+                                    class="legend-line"
+                                    style="background:#c8a96e;"
+                                >
+                                </div><span style="color:#c8a96e;"
+                                    >{t('legend.puck')}</span
+                                >
+                            </div>
+                            <div class="legend-item">
+                                <div
+                                    class="legend-line"
+                                    style="background:#e74c3c;"
+                                >
+                                </div><span style="color:#e74c3c;"
+                                    >{t('legend.actual')}</span
+                                >
+                            </div>
+                            <div class="legend-item">
+                                <div
+                                    class="legend-line"
+                                    style="background:#3498db; opacity:0.6;"
+                                >
+                                </div><span style="color:#3498db; opacity:0.7;"
+                                    >{t('legend.limit')}</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="pressure-chart" height="230"></canvas>
+
+                    <div
+                        class="puck-animation-container"
+                        style="margin-top: 10px; background: #1a1a1a; border-radius: 8px; padding: 10px; overflow: hidden;"
+                    >
+                        <div
+                            style="font-size: 10px; color: #888; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;"
+                        >
+                            Schematic Cross-section (D3 + Canvas)
+                        </div>
+                        <PuckSimulationD3 client:only="react" />
+                    </div>
+
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-label">{t('stat.wd')}</div>
+                            <div class="stat-value medium" id="stat-wd">80</div>
+                            <div class="stat-desc">g / 10s</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">{t('stat.realtime')}</div>
+                            <div class="stat-value" id="stat-realtime">0.0</div>
+                            <div class="stat-desc">bar</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">{t('stat.peak')}</div>
+                            <div class="stat-value" id="stat-peak">—</div>
+                            <div class="stat-desc">bar</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">{t('stat.duration')}</div>
+                            <div class="stat-value" id="stat-duration">—</div>
+                            <div class="stat-desc">{t('stat.duration_unit')}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">{t('stat.character')}</div>
+                            <div class="stat-value" id="stat-character">—</div>
+                            <div class="stat-desc" id="stat-note"></div>
+                        </div>
+                    </div>
+                    <div class="narrative" id="narrative-text" set:html={t('narrative.init')}>
+                    </div>
+                </div>
+
+                <div
+                    class="tab-content"
+                    id="tab-compare"
+                    style="margin-top:14px;"
+                >
+                    <div class="chart-header">
+                        <div class="chart-title">{t('compare.title')}</div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div
+                                    class="legend-line"
+                                    style="background:#27ae60;"
+                                >
+                                </div><span style="color:#27ae60;">{t('compare.heavy')}</span>
+                            </div>
+                            <div class="legend-item">
+                                <div
+                                    class="legend-line"
+                                    style="background:#c8a96e;"
+                                >
+                                </div><span style="color:#c8a96e;">{t('compare.normal')}</span>
+                            </div>
+                            <div class="legend-item">
+                                <div
+                                    class="legend-line"
+                                    style="background:#e74c3c;"
+                                >
+                                </div><span style="color:#e74c3c;"
+                                    >{t('compare.uneven')}</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="compare-chart" height="230"></canvas>
+                    <div class="narrative" set:html={t('compare.narrative')}>
+                    </div>
+                </div>
+
+                <div
+                    class="tab-content"
+                    id="tab-concept"
+                    style="margin-top:14px;"
+                >
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            {t('concept.chart_title')}
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div
+                                    class="legend-line"
+                                    style="background:#3498db;"
+                                >
+                                </div><span style="color:#3498db;">{t('concept.wd60')}</span>
+                            </div>
+                            <div class="legend-item">
+                                <div
+                                    class="legend-line"
+                                    style="background:#c8a96e;"
+                                >
+                                </div><span style="color:#c8a96e;">{t('concept.wd80')}</span>
+                            </div>
+                            <div class="legend-item">
+                                <div
+                                    class="legend-line"
+                                    style="background:#e74c3c;"
+                                >
+                                </div><span style="color:#e74c3c;">{t('concept.wd100')}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="concept-chart" height="270"></canvas>
+                    <div class="narrative" set:html={t('concept.narrative')}>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <Footer />
+
+    <script>
+        // 解決 Chart.js 依賴問題
+        import Chart from "chart.js/auto";
+        (window as any).Chart = Chart;
+
+        import { state } from "../../scripts/state.js";
+        import { initI18n } from "../../scripts/i18n.js";
+        initI18n();
+
+        // Initialize R3F / D3 component if available
+        if ((window as any).updatePuckR3F) {
+            (window as any).updatePuckR3F(0, (window as any).state);
+        }
+        import "../../scripts/main.js";
+    </script>
+</Layout>

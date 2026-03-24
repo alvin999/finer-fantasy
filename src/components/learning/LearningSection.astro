@@ -57,7 +57,7 @@ const { id, num, tag, wide = false } = Astro.props;
 
     .slide-wrap.wide {
         grid-template-columns: 1fr;
-        max-width: 960px;
+        max-width: 1100px;
     }
 
     .tag {
@@ -95,6 +95,8 @@ const { id, num, tag, wide = false } = Astro.props;
         letter-spacing: 0.03em;
         opacity: 0;
         transform: translateY(24px);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     :global(.big-text b) {

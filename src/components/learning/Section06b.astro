@@ -1,36 +1,36 @@
 ---
 /* src/components/learning/Section06b.astro */
 import LearningSection from "./LearningSection.astro";
+import { useTranslations } from "../../i18n/utils";
+const { lang = "zh-TW" } = Astro.props;
+const t = useTranslations(lang as any);
 ---
 
-<LearningSection id="s6b" num="07" tag="Headspace">
-    <p slot="text" class="big-text">
-        而 <em>Headspace</em> 越大，<br />填滿空間越久<br />等同曲線<b
-            >整體右移</b
-        >
+<LearningSection id="s6b" num="07" tag={t('learning.s6b.tag')}>
+    <p slot="text" class="big-text" set:html={t('learning.s6b.text')}>
     </p>
     <div slot="viz" id="viz-headspace">
         <div class="chart-container">
-            <p class="chart-title">Headspace 對壓力曲線的影響</p>
+            <p class="chart-title">{t('learning.s6b.chart_title')}</p>
             <div class="curve-legend" style="margin-bottom:.8rem">
                 <div class="legend-item">
                     <div class="legend-dot" style="background:var(--amber)">
-                    </div>小 Headspace
+                    </div>{t('learning.s6b.legend_small')}
                 </div>
                 <div class="legend-item">
                     <div
                         class="legend-dot"
                         style="background:rgba(139,115,85,0.65)"
                     >
-                    </div>大 Headspace
+                    </div>{t('learning.s6b.legend_large')}
                 </div>
             </div>
             <canvas class="chart-canvas" id="hs-canvas" height="180"></canvas>
             <div
                 style="display:flex;justify-content:space-between;margin-top:8px"
             >
-                <span class="chart-axis-label">萃取開始</span>
-                <span class="chart-axis-label">萃取結束</span>
+                <span class="chart-axis-label">{t('learning.s3.start')}</span>
+                <span class="chart-axis-label">{t('learning.s3.end')}</span>
             </div>
         </div>
         <!-- headspace diagram -->
@@ -55,7 +55,7 @@ import LearningSection from "./LearningSection.astro";
                         text-anchor="middle"
                         font-family="'DM Mono',monospace"
                         font-size="7"
-                        fill="var(--muted)">沖煮頭</text
+                        fill="var(--muted)">{t('learning.s6b.shower')}</text
                     >
                     <rect
                         x="18"
@@ -73,7 +73,7 @@ import LearningSection from "./LearningSection.astro";
                         text-anchor="middle"
                         font-family="'DM Mono',monospace"
                         font-size="6"
-                        fill="rgba(240,184,74,0.7)">小</text
+                        fill="rgba(240,184,74,0.7)">{t('learning.s6b.small')}</text
                     >
                     <rect
                         x="10"
@@ -90,7 +90,7 @@ import LearningSection from "./LearningSection.astro";
                         text-anchor="middle"
                         font-family="'DM Mono',monospace"
                         font-size="7"
-                        fill="rgba(184,103,30,0.7)">粉餅</text
+                        fill="rgba(184,103,30,0.7)">{t('learning.s6b.puck')}</text
                     >
                     <rect
                         x="10"
@@ -102,8 +102,8 @@ import LearningSection from "./LearningSection.astro";
                         stroke="rgba(184,103,30,0.3)"
                         stroke-width="1"></rect>
                 </svg>
-                <p class="hs-label amber">小 Headspace</p>
-                <p class="hs-subtext">壓力快速建立</p>
+                <p class="hs-label amber">{t('learning.s6b.small_label')}</p>
+                <p class="hs-subtext">{t('learning.s6b.small_sub')}</p>
             </div>
             <!-- large headspace -->
             <div style="text-align:center">
@@ -123,7 +123,7 @@ import LearningSection from "./LearningSection.astro";
                         text-anchor="middle"
                         font-family="'DM Mono',monospace"
                         font-size="7"
-                        fill="var(--muted)">沖煮頭</text
+                        fill="var(--muted)">{t('learning.s6b.shower')}</text
                     >
                     <rect
                         x="18"
@@ -141,7 +141,7 @@ import LearningSection from "./LearningSection.astro";
                         text-anchor="middle"
                         font-family="'DM Mono',monospace"
                         font-size="6"
-                        fill="rgba(139,115,85,0.7)">大空間</text
+                        fill="rgba(139,115,85,0.7)">{t('learning.s6b.large')}</text
                     >
                     <rect
                         x="10"
@@ -158,7 +158,7 @@ import LearningSection from "./LearningSection.astro";
                         text-anchor="middle"
                         font-family="'DM Mono',monospace"
                         font-size="7"
-                        fill="rgba(139,115,85,0.6)">粉餅</text
+                        fill="rgba(139,115,85,0.6)">{t('learning.s6b.puck')}</text
                     >
                     <rect
                         x="10"
@@ -170,8 +170,8 @@ import LearningSection from "./LearningSection.astro";
                         stroke="rgba(184,103,30,0.2)"
                         stroke-width="1"></rect>
                 </svg>
-                <p class="hs-label">大 Headspace</p>
-                <p class="hs-subtext">需先填滿空間</p>
+                <p class="hs-label">{t('learning.s6b.large_label')}</p>
+                <p class="hs-subtext">{t('learning.s6b.large_sub')}</p>
             </div>
         </div>
     </div>

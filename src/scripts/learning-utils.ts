@@ -119,17 +119,17 @@ export const drawHSChart = (progress: number) => {
     ctx.strokeStyle = "rgba(139,115,85,0.65)"; ctx.lineWidth = 2; ctx.stroke();
 };
 
-export const drawABChart = (progress: number) => {
+export const drawABChart = (progress: number, labels: string[] = ["WD 值", "Headspace", "填壓力道", "佈粉均勻度"]) => {
     const { ctx, w, h } = setupCanvas("ab-canvas");
     if (!ctx) return;
     const pad = { l: 60, r: 20, t: 15, b: 40 };
     const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
     ctx.clearRect(0, 0, w, h);
     const items = [
-        { label: "WD 值", val: 73, color: "#f0b84a" },
-        { label: "Headspace", val: 55, color: "rgba(184,103,30,0.65)" },
-        { label: "填壓力道", val: 30, color: "rgba(184,103,30,0.5)" },
-        { label: "佈粉均勻度", val: 90, color: "rgba(184,103,30,0.38)" }
+        { label: labels[0], val: 73, color: "#f0b84a" },
+        { label: labels[1], val: 55, color: "rgba(184,103,30,0.65)" },
+        { label: labels[2], val: 30, color: "rgba(184,103,30,0.5)" },
+        { label: labels[3], val: 90, color: "rgba(184,103,30,0.38)" }
     ];
     items.forEach((item, i) => {
         const y = pad.t + i * (26 + 16);

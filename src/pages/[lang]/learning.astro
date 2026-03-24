@@ -1,0 +1,199 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import LearningParticles from "../../components/learning/LearningParticles.astro";
+import LearningNav from "../../components/learning/LearningNav.astro";
+import LearningHero from "../../components/learning/LearningHero.astro";
+import Section01 from "../../components/learning/Section01.astro";
+import Section02 from "../../components/learning/Section02.astro";
+import Section03 from "../../components/learning/Section03.astro";
+import Section04 from "../../components/learning/Section04.astro";
+import Section05 from "../../components/learning/Section05.astro";
+import Section06 from "../../components/learning/Section06.astro";
+import Section06b from "../../components/learning/Section06b.astro";
+import Section07 from "../../components/learning/Section07.astro";
+import Section08 from "../../components/learning/Section08.astro";
+import LearningEnding from "../../components/learning/LearningEnding.astro";
+import { useTranslations } from "../../i18n/utils";
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: "zh-TW" } },
+    { params: { lang: "en" } },
+    { params: { lang: "ja" } },
+  ];
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
+---
+
+<Layout title={t('learning.title')} lang={lang}>
+    <link
+        slot="head"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+        rel="stylesheet"
+    />
+    
+    <div id="prog"></div>
+    <LearningParticles />
+    <LearningNav lang={lang} />
+
+    <main id="learning-app" data-labels={JSON.stringify([
+        t('learning.s8.wd'), 
+        t('learning.s8.hs'), 
+        t('learning.s8.tamp'), 
+        t('learning.s8.dist')
+    ])}>
+        <div class="back-link-wrapper">
+            <a href={`/finer-fantasy/${lang}/`} class="back-link">{t('nav.back')}</a>
+        </div>
+        
+        <LearningHero lang={lang} />
+        
+        <div class="sections-container">
+            <Section01 lang={lang} />
+            <div class="sep"></div>
+            <Section02 lang={lang} />
+            <div class="sep"></div>
+            <Section03 lang={lang} />
+            <div class="sep"></div>
+            <Section04 lang={lang} />
+            <div class="sep"></div>
+            <Section05 lang={lang} />
+            <div class="sep"></div>
+            <Section06 lang={lang} />
+            <div class="sep"></div>
+            <Section06b lang={lang} />
+            <div class="sep"></div>
+            <Section07 lang={lang} />
+            <div class="sep"></div>
+            <Section08 lang={lang} />
+        </div>
+
+        <div class="sep"></div>
+        <LearningEnding lang={lang} />
+    </main>
+</Layout>
+
+<script>
+    import { setupLearningObserver } from "../../scripts/learning-observer";
+    
+    // 初始化 Scroll Observer
+    document.addEventListener('DOMContentLoaded', () => {
+        const app = document.getElementById('learning-app');
+        const labelsStr = app?.getAttribute('data-labels');
+        const labels = labelsStr ? JSON.parse(labelsStr) : undefined;
+        setupLearningObserver(labels);
+    });
+</script>
+
+<style is:global>
+    @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Noto+Serif+TC:wght@400;700&display=swap");
+
+    :root {
+        --ink: #0d0906;
+        --cream: #f2ece0;
+        --warm: #e8dfc8;
+        --caramel: #b8671e;
+        --gold: #d4952a;
+        --amber: #f0b84a;
+        --rust: #7a3012;
+        --muted: #7d6848;
+        --faint: rgba(184, 103, 30, 0.12);
+        
+        /* Compatibility for some components */
+        --paper: var(--cream);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: var(--ink);
+        color: var(--cream);
+        margin: 0;
+        font-family: "Noto Serif TC", serif;
+        overflow-x: hidden;
+    }
+
+    #prog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--rust), var(--amber));
+        z-index: 999;
+    }
+
+    .sep {
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(184, 103, 30, 0.2),
+            transparent
+        );
+    }
+
+    .back-link-wrapper {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+    }
+
+    .back-link {
+        color: var(--gold);
+        text-decoration: none;
+        font-family: "DM Mono", monospace;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 14px;
+        backdrop-filter: blur(4px);
+        transition: all 0.3s;
+    }
+
+    .back-link:hover {
+        background: rgba(0, 0, 0, 0.8);
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 600px) {
+        .back-link-wrapper {
+            top: 12px;
+            left: 12px;
+        }
+        .back-link {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    }
+
+    /* 圖表通用樣式 */
+    .chart-container {
+        background: rgba(61, 31, 13, 0.2);
+        border: 1px solid rgba(184, 103, 30, 0.1);
+        padding: 1.5rem;
+        border-radius: 4px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .chart-title {
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        color: var(--gold);
+        letter-spacing: 0.2em;
+        margin-bottom: 1.2rem;
+        text-transform: uppercase;
+    }
+
+    .chart-canvas {
+        width: 100%;
+        display: block;
+    }
+</style>

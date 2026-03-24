@@ -1,6 +1,10 @@
 import { state, PUMP_MAX, TOTAL_TIME, N } from './state.js';
 import { drawPressureChart, drawCompareChart, drawConceptChart, drawPuckAnimation } from './charts.js';
 import { mkCurve, getSimulatedValue } from './physics.js';
+import { t, initI18n } from './i18n.js';
+
+// 初始化語系
+initI18n();
 
 // ======== NARRATIVE (RV) ========
 
@@ -11,21 +15,23 @@ export function updateNarrative(peak, dur) {
     if (!narrativeEl) return;
 
     let text = '';
-    if (wd <= 68) text = `<strong>WD ${wd} — 低流量</strong>：水流緩，壓力爬升慢，峰值 <em>${peak.toFixed(1)} bar</em>，高壓維持 <em>${dur.toFixed(1)} 秒</em>。風味溫和、甜感明顯，Body 較低。`;
-    else if (wd <= 88) text = `<strong>WD ${wd} — 中等流量</strong>：曲線平衡，峰值 <em>${peak.toFixed(1)} bar</em>，高壓維持 <em>${dur.toFixed(1)} 秒</em>。甜感、酸度與醇厚度取得較佳平衡。`;
-    else text = `<strong>WD ${wd} — 高流量</strong>：迅速追上粉餅阻力，峰值 <em>${peak.toFixed(1)} bar</em>，高壓持續 <em>${dur.toFixed(1)} 秒</em>。萃取效率高，風味鮮明強烈。`;
+    const params = { wd, peak: peak.toFixed(1), dur: dur.toFixed(1), maxP, hs: state.headspace, delay: (state.headspace * 2.64 / (wd / 10)).toFixed(1) };
+    
+    if (wd <= 68) text = t('narrative.low', params);
+    else if (wd <= 88) text = t('narrative.medium', params);
+    else text = t('narrative.high', params);
 
-    if (state.currentMachine === 'vibe') text += ` <strong>Vibration Pump</strong> 最高可達 ${maxP} bar，曲線略有震動特性。`;
-    else text += ` <strong>Rotary Pump</strong> 定壓 ${maxP} bar，曲線穩定平滑。`;
+    if (state.currentMachine === 'vibe') text += t('narrative.vibe', params);
+    else text += t('narrative.rotary', params);
 
     if (state.headspace > 2.5) {
-        text += ` <br><br>較大的 <strong>Headspace (${state.headspace}mm)</strong> 增加了注水填滿時間，形成了約 ${(state.headspace * 2.64 / (wd / 10)).toFixed(1)} 秒的自然預浸效果，延緩了壓力爬升。`;
+        text += t('narrative.headspace', params);
     }
 
     let c = '', n = '';
-    if (wd <= 68) { c = '柔和'; n = '酸明、Body 輕'; }
-    else if (wd <= 88) { c = '均衡'; n = '甜酸醇平衡'; }
-    else { c = '強烈'; n = '鮮明、醇厚'; }
+    if (wd <= 68) { c = t('char.soft'); n = t('note.soft'); }
+    else if (wd <= 88) { c = t('char.balanced'); n = t('note.balanced'); }
+    else { c = t('char.strong'); n = t('note.strong'); }
 
     const charEl = document.getElementById('stat-character');
     const noteEl = document.getElementById('stat-note');
@@ -50,7 +56,7 @@ export function startAnimation(redrawRV) {
     const timeDisplay = document.getElementById('time-display');
 
     if (animBtn) animBtn.classList.add('playing');
-    if (animLabel) animLabel.textContent = '暫停';
+    if (animLabel) animLabel.textContent = t('anim.pause');
     if (playIcon) playIcon.setAttribute('d', 'M2,1 L5,1 L5,13 L2,13 Z M9,1 L12,1 L12,13 L9,13 Z');
 
     function step() {
@@ -105,9 +111,9 @@ export function stopAnimation(fin) {
     const timeDisplay = document.getElementById('time-display');
 
     if (animBtn) animBtn.classList.remove('playing');
-    if (animLabel) animLabel.textContent = fin ? '重新播放' : '播放萃取過程';
+    if (animLabel) animLabel.textContent = fin ? t('anim.replay') : t('anim.play');
     if (playIcon) playIcon.setAttribute('d', 'M3,1 L13,7 L3,13 Z');
-    if (timeDisplay) timeDisplay.textContent = fin ? '萃取完成 ✓' : '準備就緒';
+    if (timeDisplay) timeDisplay.textContent = fin ? t('anim.done') : t('anim.ready');
 
     if (!fin) {
         state.animProgress = 0;

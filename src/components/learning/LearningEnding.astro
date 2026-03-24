@@ -1,5 +1,8 @@
 ---
 /* src/components/learning/LearningEnding.astro */
+import { useTranslations } from "../../i18n/utils";
+const { lang = "zh-TW" } = Astro.props;
+const t = useTranslations(lang as any);
 ---
 
 <section id="ending">
@@ -10,16 +13,14 @@
         ∞
     </div>
     <div class="end-rule"></div>
-    <h2 class="end-title">
-        假想粉餅阻力<br /><span style="color:var(--caramel)">是讀懂壓力的語言</span>
+    <h2 class="end-title" set:html={t('learning.end.title')}>
     </h2>
-    <p class="end-sub">
-        均勻度影響曲線形狀<br />WD 值決定曲線高低<br />每次萃取，都是一條獨特的故事
+    <p class="end-sub" set:html={t('learning.end.sub')}>
     </p>
     <div class="end-rule"></div>
 
     <!-- 返回按鈕 -->
-    <a href="/finer-fantasy/" class="back-link-bottom">返回主程式</a>
+    <a href={`/finer-fantasy/${lang}/`} class="back-link-bottom">{t('learning.end.back')}</a>
 </section>
 
 <style>

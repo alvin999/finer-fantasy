@@ -1,36 +1,38 @@
 ---
 /* src/components/learning/Section04.astro */
 import LearningSection from "./LearningSection.astro";
+import { useTranslations } from "../../i18n/utils";
+const { lang = "zh-TW" } = Astro.props;
+const t = useTranslations(lang as any);
 ---
 
-<LearningSection id="s4" num="04" tag="WD 值的影響">
-    <p slot="text" class="big-text">
-        <em>WD 值越高</em>，<br />實際壓力<b>越快追上</b><br />假想粉餅曲線
+<LearningSection id="s4" num="04" tag={t('learning.s4.tag')}>
+    <p slot="text" class="big-text" set:html={t('learning.s4.text')}>
     </p>
     <div slot="viz" id="viz-wd-chart">
         <div class="chart-container">
-            <p class="chart-title">實際壓力 vs 假想曲線</p>
+            <p class="chart-title">{t('learning.s4.chart_title')}</p>
             <div class="curve-legend">
                 <div class="legend-item">
                     <div
                         class="legend-dot"
                         style="background:rgba(184,103,30,0.4);border-top:1px dashed var(--muted)"
                     >
-                    </div>假想曲線
+                    </div>{t('learning.s4.legend_puck')}
                 </div>
                 <div class="legend-item">
                     <div
                         class="legend-dot"
                         style="background:var(--amber)"
                     >
-                    </div>高 WD
+                    </div>{t('learning.s4.legend_hi')}
                 </div>
                 <div class="legend-item">
                     <div
                         class="legend-dot"
                         style="background:var(--muted)"
                     >
-                    </div>低 WD
+                    </div>{t('learning.s4.legend_lo')}
                 </div>
             </div>
             <canvas class="chart-canvas" id="wd-canvas" height="180"></canvas>

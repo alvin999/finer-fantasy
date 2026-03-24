@@ -1,5 +1,6 @@
 import { state, PUMP_MAX, TOTAL_TIME, N } from './state.js';
 import { puckResistance, runExtractionSimulation, getSimulatedValue, mkCurve } from './physics.js';
+import { t } from './i18n.js';
 
 // ======== CANVAS HELPERS ========
 
@@ -125,9 +126,9 @@ export function drawCompareChart() {
     const { xPx, yPx } = drawAxes(ctx, W, H, PAD, 13, [3, 6, 9, 12]);
     
     const methods = [
-        { key: 'heavy', color: '#27ae60', label: '重填壓' },
-        { key: 'normal', color: '#c8a96e', label: '標準' },
-        { key: 'uneven', color: '#e74c3c', label: '佈粉不均' },
+        { key: 'heavy', color: '#27ae60', label: t('compare.heavy') },
+        { key: 'normal', color: '#c8a96e', label: t('compare.normal') },
+        { key: 'uneven', color: '#e74c3c', label: t('compare.uneven') },
     ];
 
     methods.forEach(({ key, color, label }) => {
@@ -157,9 +158,9 @@ export function drawConceptChart() {
     ctx.fillStyle = '#161616'; ctx.fillRect(0, 0, W, H);
     
     const scenarios = [
-        { wd: 60, label: 'WD 60  低流量', color: '#3498db' },
-        { wd: 80, label: 'WD 80  基準', color: '#c8a96e' },
-        { wd: 100, label: 'WD 100  高流量', color: '#e74c3c' },
+        { wd: 60, label: t('concept.wd60'), color: '#3498db' },
+        { wd: 80, label: t('concept.wd80'), color: '#c8a96e' },
+        { wd: 100, label: t('concept.wd100'), color: '#e74c3c' },
     ];
     
     const colW = W / 3;

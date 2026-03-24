@@ -1,24 +1,26 @@
 ---
 /* src/components/learning/Section03.astro */
 import LearningSection from "./LearningSection.astro";
+import { useTranslations } from "../../i18n/utils";
+const { lang = "zh-TW" } = Astro.props;
+const t = useTranslations(lang as any);
 ---
 
-<LearningSection id="s3" num="03" tag="核心概念" wide={true}>
+<LearningSection id="s3" num="03" tag={t('learning.s3.tag')} wide={true}>
     <div slot="text">
-        <p class="big-text">
-            我們可以假想一條<br /><em>粉餅壓力曲線</em><br />從 <b>15 bar</b> 緩降至 <b>6 bar</b>
+        <p class="big-text" set:html={t('learning.s3.text')}>
         </p>
         <p class="sub-text">
-            （實際阻力會因研磨粗細與粉量不同而有所差異）
+            {t('learning.s3.sub')}
         </p>
     </div>
     <div slot="viz" id="viz-curve" style="margin-top:2.5rem;transform:translateY(20px)">
         <div class="chart-container">
-            <p class="chart-title">假想粉餅壓力曲線</p>
+            <p class="chart-title">{t('learning.s3.chart_title')}</p>
             <canvas class="chart-canvas" id="puck-canvas" height="200"></canvas>
             <div style="display:flex;justify-content:space-between;margin-top:8px">
-                <span class="chart-axis-label">萃取開始</span>
-                <span class="chart-axis-label">萃取結束</span>
+                <span class="chart-axis-label">{t('learning.s3.start')}</span>
+                <span class="chart-axis-label">{t('learning.s3.end')}</span>
             </div>
         </div>
     </div>

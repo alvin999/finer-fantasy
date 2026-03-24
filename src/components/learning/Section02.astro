@@ -1,11 +1,13 @@
 ---
 /* src/components/learning/Section02.astro */
 import LearningSection from "./LearningSection.astro";
+import { useTranslations } from "../../i18n/utils";
+const { lang = "zh-TW" } = Astro.props;
+const t = useTranslations(lang as any);
 ---
 
-<LearningSection id="s2" num="02" tag="動態變化">
-    <p slot="text" class="big-text">
-        熱水穿透咖啡粉，<br />阻力<b>持續下降</b><br />壓力隨之改變
+<LearningSection id="s2" num="02" tag={t('learning.s2.tag')}>
+    <p slot="text" class="big-text" set:html={t('learning.s2.text')}>
     </p>
     <div slot="viz" id="viz-flow">
         <svg

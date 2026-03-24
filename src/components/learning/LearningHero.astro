@@ -1,5 +1,8 @@
 ---
 /* src/components/learning/LearningHero.astro */
+import { useTranslations } from "../../i18n/utils";
+const { lang = "zh-TW" } = Astro.props;
+const t = useTranslations(lang as any);
 ---
 
 <section id="hero">
@@ -19,9 +22,9 @@
         style="width:1000px;height:1000px;left:50%;top:50%;transform:translate(-50%,-50%);animation-delay:-4s"
     >
     </div>
-    <p class="kicker">Espresso Extraction Theory</p>
-    <h1 class="hero-h">假想<br /><span class="accent">粉餅阻力</span></h1>
-    <p class="hero-sub">理解壓力曲線的語言，掌握萃取本質</p>
+    <p class="kicker">{t('learning.hero.kicker')}</p>
+    <h1 class="hero-h" id="hero-title" set:html={t('learning.hero.title')}></h1>
+    <p class="hero-sub">{t('learning.hero.sub')}</p>
     <div class="scroll-arrow">
         <svg width="24" height="36" viewBox="0 0 24 36" fill="none">
             <line
@@ -52,6 +55,8 @@
         position: relative;
         overflow: hidden;
         padding: 5rem 2rem;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     .hero-bg {
@@ -89,16 +94,18 @@
         transform: translateY(40px);
     }
 
-    .hero-h .accent {
+    .hero-h :global(.accent) {
         color: var(--caramel);
     }
 
     .hero-sub {
-        margin-top: 2.5rem;
-        font-size: clamp(13px, 1.4vw, 16px);
+        margin-top: 3rem;
+        font-size: clamp(14px, 1.5vw, 18px);
         color: var(--muted);
-        letter-spacing: 0.18em;
+        letter-spacing: 0.2em;
         opacity: 0;
+        max-width: 600px;
+        line-height: 1.8;
     }
 
     .scroll-arrow {

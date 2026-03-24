@@ -1,22 +1,24 @@
 ---
 /* src/components/learning/Section05.astro */
 import LearningSection from "./LearningSection.astro";
+import { useTranslations } from "../../i18n/utils";
+const { lang = "zh-TW" } = Astro.props;
+const t = useTranslations(lang as any);
 ---
 
-<LearningSection id="s5" num="05" tag="高壓維持">
-    <p slot="text" class="big-text">
-        追得越快，<br /><b>高壓維持越久</b><br />風味萃取越完整
+<LearningSection id="s5" num="05" tag={t('learning.s5.tag')}>
+    <p slot="text" class="big-text" set:html={t('learning.s5.text')}>
     </p>
     <div slot="viz" id="viz-duration">
         <div class="chart-container">
-            <p class="chart-title">高壓維持時間比較</p>
+            <p class="chart-title">{t('learning.s5.chart_title')}</p>
             <canvas class="chart-canvas" id="dur-canvas" height="180"></canvas>
             <div class="curve-legend" style="margin-top:10px">
                 <div class="legend-item">
-                    <div class="legend-dot" style="background:var(--amber)"></div>高 WD
+                    <div class="legend-dot" style="background:var(--amber)"></div>{t('learning.s4.legend_hi')}
                 </div>
                 <div class="legend-item">
-                    <div class="legend-dot" style="background:var(--muted)"></div>低 WD
+                    <div class="legend-dot" style="background:var(--muted)"></div>{t('learning.s4.legend_lo')}
                 </div>
             </div>
         </div>

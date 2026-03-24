@@ -1,5 +1,9 @@
 # Finer Fantasy - Espresso 萃取物理模擬器
 
+[繁體中文](#finer-fantasy---espresso-萃取物理模擬器) | [English](#finer-fantasy---espresso-extraction-physics-simulator) | [日本語](#finer-fantasy---エスプレッソ抽出物理シミュレーター)
+
+---
+
 ### 主畫面 (Main Simulator)
 ![Main Simulator](./screenshots/screenshot1.png)
 
@@ -66,6 +70,98 @@ npm install
 # 啟動開發伺服器
 npm run dev
 ```
+
+---
+
+# Finer Fantasy - Espresso Extraction Physics Simulator
+
+## ☕ The Origins
+
+"Why name it **Finer Fantasy**?"
+
+It's not just a tribute to the classic RPG *Final Fantasy*, but also the ultimate fantasy of countless baristas for that "perfect shot." In the coffee world, there's a legendary solution: "**Grind Finer**." This project transforms the romantic fantasy of "grinding" and "extraction" into precise physics simulation.
+
+### Build Your "Physics Intuition" and Mental Models
+
+In actual coffee brewing, **WD (Water Debit)** and **Headspace** are often extremely abstract concepts. It's hard to directly observe how water moves inside the tamped puck, and not every espresso machine displays real-time extraction pressure or flow rate.
+
+**Finer Fantasy** introduces the concept of "**Fictitious Puck Resistance**," a bridge between "phenomena" and "physics":
+- **Visualize the Invisible**: By simulating dynamic resistance as water flows through the puck, it helps you build a clear **mental model** in your head.
+- **Enhanced Extraction Feel**: When you adjust tamping force, distribution, or machine parameters, you see immediate responses in the simulation curves, making you feel "more connected" to the physical meaning of every subtle movement during actual operation.
+
+## 🌟 Core Features
+
+- **Soul Machine Simulation**:
+  - **Rotary Pump**: Stable pressure, professional precision.
+  - **Vibration Pump**: Subtle pulsations with a life of their own.
+- **A Dance of Physical Parameters**:
+  - **WD (Water Debit)**: How does 10-second water output dictate pressure buildup?
+  - **Headspace**: Unveiling the aesthetics of "natural pre-infusion" delay.
+  - **Channeling Simulation**: Experience the fatal impact of "uneven distribution" and "resistance collapse."
+- **Intertwining Data and Visuals**:
+  - Real-time Canvas rendering capturing every millisecond of pressure fluctuation.
+  - Dynamic playback support, like watching a miniature physics documentary.
+
+## 🧭 Interactive Guide: Fictitious Puck Resistance
+
+Want to dive deeper into physics details? We've prepared a dedicated **Educational Guide**.
+
+On this **GSAP**-powered interactive page, you can scroll through:
+1. **The Dance of Water**: Physics model breakdown of water passing through the puck.
+2. **Resistance Curve Analysis**: Physical reactions under different pressures and techniques.
+3. **From 0 to 9 bar**: The complete extraction process.
+
+## 🛠️ Tech Stack
+
+- **Frontend**: [Astro](https://astro.build/) - For a blazing fast development and runtime experience.
+- **Animation**: [GSAP](https://greensock.com/gsap/) - Driving delicate interactive navigation.
+- **Graphics**: Native Canvas API - For uncompromising performance.
+
+---
+
+# Finer Fantasy - エスプレッソ抽出物理シミュレーター
+
+## ☕ プロジェクトについて (The Origins)
+
+「なぜ **Finer Fantasy** なのか？」
+
+これは名作RPG『*Final Fantasy*』へのオマージュであると同時に、数多くのバリスタが追い求める「完璧な一杯」への究極の幻想でもあります。コーヒーの世界には、「**Grind Finer**（もっと細く挽け）」という伝説的な解決策があります。このプロジェクトは、「グラインド」と「抽出」にまつわるロマンチックな幻想を、正確な物理シミュレーションへと昇華させたものです。
+
+### 「物理的直感」とメンタルモデルの構築
+
+実際のコーヒー抽出において、**WD値（Water Debit、吐出量）**や **Headspace（ヘッドスペース）**は非常に抽象的な概念になりがちです。タンピングされた粉の中を水がどのように移動するかを直接観察することは難しく、すべてのマシンがリアルタイムの圧力や流速を表示できるわけではありません。
+
+**Finer Fantasy** は「**仮想粉体抵抗** (Fictitious Puck Resistance)」という概念を導入しました。これは「現象」と「物理」を繋ぐ架け橋です。
+- **不可視の可視化**：粉の中を流れる水の動的抵抗をシミュレートすることで、頭の中に明確な**メンタルモデル**を構築するのを助けます。
+- **抽出をより「感じる」**：タンピングの強さ、ディストリビューション、マシンのパラメータを調整すると、シミュレーション曲線が即座に反応します。これにより、実際の操作（タンピング、レベリング、流速の観察）における細かな微調整が持つ物理的な意味を、より深く「実感」できるようになります。
+
+## 🌟 主な特徴
+
+- **マシンの魂をシミュレート**：
+  - **ロータリーポンプ (Rotary Pump)**：安定した圧力、プロフェッショナルの精度。
+  - **バイブレーションポンプ (Vibration Pump)**：生命感のある微細な脈動。
+- **物理パラメータの華麗なダンス**：
+  - **WD (Water Debit)**：10秒間の吐出量が圧力の上昇をどう左右するか？
+  - **Headspace (ヘッドスペース)**： 「自然な蒸らし（プリインフュージョン）」がもたらす遅延の美学。
+  - **チャネリング (Channeling) シミュレート**：「偏った粉」や「抵抗の崩壊」が抽出に與える致命的な影響を體驗。
+- **データとビジュアルの融合**：
+  - リアルタイム Canvas レンダリングにより、ミリ秒単位の圧力変動をキャプチャ。
+  - ダイナミックな再生に対応。まるでミクロな物理ドキュメンタリーを見ているかのような體驗。
+
+## 🧭 インタクティブガイド：仮想粉体抵抗
+
+物理的な詳細をより深く理解したいですか？ 特設の **教育ガイドページ** を用意しました。
+
+**GSAP** を駆使したこのインタラクティブページでは、スクロールすることで以下の內容を確認できます：
+1. **水の舞い**：粉を通り抜ける水の物理モデルの分解。
+2. **抵抗曲線分析**：異なる圧力や手法下での物理的反應。
+3. **0から9barまで**：抽出の全プロセス。
+
+## 🛠️ 技術スタック
+
+- **Frontend**: [Astro](https://astro.build/) - 高速な開發と實行體驗。
+- **Animation**: [GSAP](https://greensock.com/gsap/) - 繊細なインタラクションを驅動。
+- **Graphics**: Native Canvas API - 妥協のないパフォーマンス。
 
 ---
 *Powered by Coffee, Code, and the never-ending dream of a perfect shot.*

@@ -2,11 +2,13 @@
 /* src/components/learning/Section01.astro */
 import LearningSection from "./LearningSection.astro";
 import { RemotionGauge } from "../RemotionGauge";
+import { useTranslations } from "../../i18n/utils";
+const { lang = "zh-TW" } = Astro.props;
+const t = useTranslations(lang as any);
 ---
 
-<LearningSection id="s1" num="01" tag="基礎認識">
-    <p slot="text" class="big-text">
-        咖啡萃取中，<br /><b>粉餅阻力不是固定的</b>
+<LearningSection id="s1" num="01" tag={t('learning.s1.tag')}>
+    <p slot="text" class="big-text" set:html={t('learning.s1.text')}>
     </p>
     <div slot="viz" id="viz-machine">
         <RemotionGauge client:only="react" />

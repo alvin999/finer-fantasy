@@ -1,15 +1,17 @@
 ---
 /* src/components/learning/Section08.astro */
 import LearningSection from "./LearningSection.astro";
+import { useTranslations } from "../../i18n/utils";
+const { lang = "zh-TW" } = Astro.props;
+const t = useTranslations(lang as any);
 ---
 
-<LearningSection id="s8" num="09" tag="差異尺度">
-    <p slot="text" class="big-text">
-        填壓的影響<br />比 WD 值<b>更為微妙</b><br />需要 <em>A/B Test</em> 才能感受
+<LearningSection id="s8" num="09" tag={t('learning.s8.tag')} wide={true}>
+    <p slot="text" class="big-text" set:html={t('learning.s8.text')}>
     </p>
     <div slot="viz" id="viz-abtest">
         <div class="chart-container">
-            <p class="chart-title">影響力比較</p>
+            <p class="chart-title">{t('learning.s8.chart_title')}</p>
             <canvas class="chart-canvas" id="ab-canvas" height="180"></canvas>
         </div>
     </div>
